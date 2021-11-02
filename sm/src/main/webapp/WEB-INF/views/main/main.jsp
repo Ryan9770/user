@@ -19,7 +19,7 @@
 <main>
     <div class="body-container">
         <div style="padding-top: 15px;">
-            메인 화면 - 테스트 화면입니다.
+            메인 화면 - 테스트 화면22입니다.
         </div>
     </div>
 </main>
