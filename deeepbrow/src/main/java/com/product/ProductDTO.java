@@ -1,7 +1,7 @@
 package com.product;
 
 public class ProductDTO {
-	private String pNo;
+	private int pNo;
 	private String pName;
 	private int pPrice;
 	private String pDesc;
@@ -11,16 +11,17 @@ public class ProductDTO {
 	private String pCategory_code;
 	private String pCategory_name;
 
-	private String imageNo;
+	private int imageNo;
 	private String image_name;
 	private String[] image_names;
 	
-	public String getpNo() {
+	public int getpNo() {
 		return pNo;
 	}
-	public void setpNo(String pNo) {
+	public void setpNo(int pNo) {
 		this.pNo = pNo;
 	}
+
 	public String getpName() {
 		return pName;
 	}
@@ -70,13 +71,14 @@ public class ProductDTO {
 	public void setpCategory_name(String pCategory_name) {
 		this.pCategory_name = pCategory_name;
 	}
-	
-	public String getImageNo() {
+	public int getImageNo() {
 		return imageNo;
 	}
-	public void setImageNo(String imageNo) {
+	public void setImageNo(int imageNo) {
 		this.imageNo = imageNo;
 	}
+	
+	
 	public String getImage_name() {
 		return image_name;
 	}
