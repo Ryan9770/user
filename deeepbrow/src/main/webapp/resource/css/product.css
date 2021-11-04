@@ -1,0 +1,48 @@
+@charset "UTF-8";
+.grid-box {
+	margin-top: 3px; margin-bottom: 5px;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(100px, 1fr));
+	grid-column-gap: 100px;
+	grid-row-gap: 100px;
+}
+
+.prdImg img{
+	max-width : 100%;
+	max-height : 700px;
+	box-sizing: border-box;
+	vertical-align: middle;
+	text-align: center;
+	padding: 10px;
+}
+
+.category-title{
+	font-size: 30px; 
+}
+
+.contents{
+	margin : 45px auto 0;
+}
+
+.prdList{
+	list-style: none;
+	display: inline-block;
+	margin: 50px auto;
+}
+
+
+
+div{
+	display: block;
+}
+
+.description a{
+	display: block;	
+	clear : both;
+}
+
+.description a span{
+	font-size: 15px;
+	color : #fff;
+	float: left;
+}
