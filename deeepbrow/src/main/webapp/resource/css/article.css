@@ -1,0 +1,129 @@
+@charset "UTF-8";
+.contents{
+	margin : 45px auto 0;
+}
+
+
+
+div{
+	display: block;
+}
+
+.prd{
+	max-width : 1500px;
+	margin: 0 auto;	
+}
+
+.prd > .item1{
+	float: left;
+}
+
+.prd > .item2{
+	display: inline-block;
+}
+
+.item1{
+	display: inline-block;
+	vertical-align: top;
+	width: 50%;
+	min-height: 100vh;
+	padding-right: 5%;	
+	box-sizing: border-box;
+}
+
+.item1 p img{
+	width: 750px;
+}
+
+.item2{
+	position: fixed;
+	top: 100px;
+	width: 40%; 
+	vertical-align: top;
+	
+}
+
+.txal-center{
+	text-align: center;
+}
+
+.prdDetail{
+	position: relative;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.prdInfo table{
+	border: 0;
+	font-size: 12px;
+	color: #ffe;
+	margin: 0px;
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+	box-sizing: border-box;
+	}
+.prdInfo table tbody{
+	vertical-align: middle;
+}
+
+.prdInfo td{
+	padding: 15px 0;
+	line-height: 1.8;
+	vertical-align: middle;
+	border: 0;	
+	}
+
+.prdName{
+	font-size: 15px;
+	color: #fff;
+	font-weight: bold;
+}
+
+.prdPrice{
+ 	font-size: 11px;
+ 	color: #fff;
+}
+
+.totalProduct{
+	margin: 10px 0 0;
+}
+
+#quantity{
+ 	width: 25px;
+ 	height: 25px;
+ 	text-align: center;
+}
+.btnArea{
+	margin-top: 20px;
+	
+}
+.btn1{
+	float: left;
+	text-align: center;
+	width: 35%;
+	height: 50px;
+	
+	margin-right: 10px;
+}
+
+.btn2{
+	float: left;
+	text-align: center;
+	width: 55%;
+	height: 50px;
+
+}
+
+.review-box{
+	clear: both;
+
+}
+
+.review-top{
+	margin: 50px;
+	width: 100%;
+	height: 40px;
+	border-bottom: 1px solid #fff;
+}
+
