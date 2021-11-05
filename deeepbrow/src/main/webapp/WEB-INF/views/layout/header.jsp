@@ -76,6 +76,7 @@ $(function() {
 				<li><a>회원관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/manage/list.do">재고관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/asale/list.do">판매현황</a></li>
+				<li><a href="${pageContext.request.contextPath}/delivery/list.do">배송관리</a></li>
 				<li><a>게시판관리</a></li>
 			</ul>
 		</c:if>
