@@ -1,12 +1,12 @@
 package com.qna;
 
-public class QnADTO {
-	private int qNo;
+public class QnaDTO {
+	private int qNo,listNum;
 	private String qSubject;
 	private String qContent;
 	private String qReg_date;
 	private String qCategory;
-	private String mNo;
+	private String mId;
 	private String pNo;
 	
 	public int getqNo() {
@@ -39,17 +39,23 @@ public class QnADTO {
 	public void setqCategory(String qCategory) {
 		this.qCategory = qCategory;
 	}
-	public String getmNo() {
-		return mNo;
+	public String getmId() {
+		return mId;
 	}
-	public void setmNo(String mNo) {
-		this.mNo = mNo;
+	public void setmNo(String mId) {
+		this.mId = mId;
 	}
 	public String getpNo() {
 		return pNo;
 	}
 	public void setpNo(String pNo) {
 		this.pNo = pNo;
+	}
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
 	}
 	
 	

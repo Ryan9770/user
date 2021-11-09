@@ -40,9 +40,9 @@
 	font-weight: 600;
 }
 .subject {
-	width: 70%;
+	width: 50%;
 }
-.table-list td:nth-child(2) {
+.table-list td:nth-child(3) {
 	text-align: left;
 	padding-left: 20px;
 }
@@ -73,10 +73,6 @@
 </style>
 <script type="text/javascript">
 
-function searchList() {
-	var f = document.searchForm;
-	f.submit();
-}
 </script>
 </head>
 <body>
@@ -88,7 +84,7 @@ function searchList() {
 <main>
 <div class="container">
 	<div class="title-body">
-		<span class="article-title">공지사항</span>
+		<span class="article-title">QnA</span>
 	</div>
 	<table class="table" style="text-align: left;">
 		<tr>
@@ -101,20 +97,20 @@ function searchList() {
 		<table class="table table-list">
 			<tr>
 				<th>No</th>
+				<th>PRODUCT</th>
 				<th class="subject">SUBJECT</th>
 				<th>NAME</th>
 				<th>DATE</th>
 			</tr>
-			<c:forEach items="${list}" var="dto">
 			<tr>
-				<td>${dto.listNum}</td>
+				<td>1</td>
+				<td>이미지</td>
 				<td>
-					<a href="${articleUrl}&nNo=${dto.nNo}">${dto.nSubject}</a>
+					<a href="${articleUrl}&nNo=${dto.nNo}">배송언제?</a>
 				</td>
-				<td>관리자</td>
-				<td>${dto.nReg_date}</td>
+				<td>ㅁㅁㅁ</td>
+				<td>2021-11-11</td>
 			</tr>
-			</c:forEach>
 			
 		</table>
 	</form>
@@ -138,8 +134,8 @@ function searchList() {
 					</form>
 				</td>
 				<td align="right" width="100">
-					<c:if test="${sessionScope.member.userId == 'admin'}">
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/write.do?rows=${rows}';">글올리기</button>
+					<c:if test="${sessionScope.member.userId != 'admin'}">
+						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/write.do?rows=${rows}';">글올리기</button>
 					</c:if>
 				</td>
 			</tr>

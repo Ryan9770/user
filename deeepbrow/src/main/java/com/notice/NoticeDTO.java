@@ -1,12 +1,11 @@
 package com.notice;
 
 public class NoticeDTO {
-	private int nNo;
+	private int nNo,listNum;
 	private String nSubject;
 	private String nContent;
 	private String nReg_date;
 	private String mId;
-	private String mNo;
 	
 	public int getnNo() {
 		return nNo;
@@ -38,11 +37,11 @@ public class NoticeDTO {
 	public void setmId(String mId) {
 		this.mId = mId;
 	}
-	public String getmNo() {
-		return mNo;
+	public int getListNum() {
+		return listNum;
 	}
-	public void setmNo(String mNo) {
-		this.mNo = mNo;
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
 	}
 	
 	

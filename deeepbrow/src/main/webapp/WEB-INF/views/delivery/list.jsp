@@ -11,14 +11,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <style type="text/css">
-* {
-	margin: 0; padding: 0;
-    box-sizing: border-box;
+.title-body {
+	padding: 50px 0; text-align: center;
 }
 
-body {
-	font-size: 14px;
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+.title-body .article-title {
+	font-size: 20px;
 }
 
 a {
@@ -42,10 +40,10 @@ h1 {
 }
 
 .table-stock {
-	width: 100%;
-	border-collapse: collapse;
+	width: 80%;
+	margin: 0 auto;
 	border-spacing: 0;
-	margin-bottom: 200px;
+	border-collapse: collapse;
 }
 
 
@@ -55,7 +53,9 @@ h1 {
 
 .table-stock thead tr:first-child{
 	border-top: 2px solid #ccc;
-	background: none;
+	
+	line-height: 60px;
+	font-weight: 600;
 }
 .table-stock thead span{
 	font-size: 10px;
@@ -102,9 +102,11 @@ i{
 </header>
 <main>
 <div class="container">
+	<div class="title-body">
+		<span class="article-title">배송관리</span>
+	</div>
 	<table class="table-stock paginated">
 		
-		<h1>배송관리</h1>
 		<thead style="clear: both;">
 			<tr>
 				<th width="200" class="stockclass">주문번호</th>
