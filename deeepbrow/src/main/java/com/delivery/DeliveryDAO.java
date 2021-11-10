@@ -58,9 +58,10 @@ public class DeliveryDAO {
 		try {
 			sb.append("SELECT * FROM ( ");
 			sb.append("		SELECT ROWNUM rnum, tb.* FROM ( ");
-			sb.append("			SELECT po.orderNo, mNo, dName, dTel, del_memo, delNo, dAddr1, dAddr2, dZipCode ");
+			sb.append("			SELECT po.orderNo, po.order_date, po.pay_date, po.mId, po.pay_price, dName, ds_manage, dTel, del_memo, delNo, dAddr1, dAddr2, dZipCode ");
 			sb.append("			FROM delivery d ");
-			sb.append("			JOIN productOrder po ON d.orderNo = po.orderNo ");
+			sb.append("			JOIN product_order po ON d.orderNo = po.orderNo ");
+			sb.append("			LEFT OUTER JOIN delivery_status ds ON d.orderNo = ds.orderNo ");
 			sb.append("			) tb WHERE ROWNUM <= ?");
 			sb.append("		) WHERE rnum >= ? ");
 			
@@ -73,7 +74,11 @@ public class DeliveryDAO {
 			while(rs.next()) {
 				DeliveryDTO dto = new DeliveryDTO();
 				
-				dto.setOrderNo(rs.getString("orderNo"));
+				dto.setOrderNo(rs.getInt("orderNo"));
+				dto.setOrder_date(rs.getString("order_date"));
+				dto.setPay_date(rs.getString("pay_date"));
+				dto.setmId(rs.getString("mId"));
+				dto.setPay_price(rs.getInt("pay_price"));
 				dto.setdName(rs.getString("dName"));
 				dto.setdTel(rs.getString("dTel"));
 				dto.setDel_memo(rs.getString("del_memo"));
@@ -81,6 +86,7 @@ public class DeliveryDAO {
 				dto.setdAddr1(rs.getString("dAddr1"));
 				dto.setdAddr2(rs.getString("dAddr2"));
 				dto.setdZipCode(rs.getString("dZipCode"));
+				dto.setDs_manage(rs.getString("ds_manage"));
 				
 				list.add(dto);
 				
@@ -97,5 +103,60 @@ public class DeliveryDAO {
 		}
 		
 		return list;
+	}
+	
+	public int cancelOrder(int orderNo) throws SQLException {
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO delivery_status(orderNo, dsDate, ds_manage) VALUES(?, SYSDATE, '주문취소')";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, orderNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	public int deliverOrder(int orderNo) throws SQLException {
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO delivery_status(orderNo, dsDate, ds_manage) VALUES(?, SYSDATE, '발송완료')";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, orderNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
 	}
 }

@@ -154,7 +154,7 @@ select {
 					</div>
 				</div>
 				<div class="third">
-					<a href="#"><i>Previus</i></a>
+					<a href="#"><i>Previous</i></a>
 					&nbsp;
 					<a href="#">1</a>
 					&nbsp;

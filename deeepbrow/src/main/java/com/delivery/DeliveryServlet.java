@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.util.MyServlet;
 import com.util.MyUtil;
 
@@ -23,6 +22,10 @@ public class DeliveryServlet extends MyServlet {
 		
 		if(uri.indexOf("list.do") != -1) {
 			listForm(req, resp);
+		} else if(uri.indexOf("canceled_order.do") != -1) {
+			delete(req, resp);
+		} else if(uri.indexOf("delivered_order.do") != -1) {
+			deliver(req, resp);
 		}
 	}
 	
@@ -53,12 +56,10 @@ public class DeliveryServlet extends MyServlet {
 			List<DeliveryDTO> list = dao.listDelivery(start, end);
 			
 			String listUrl = cp + "/delivery/list.do";
-			String articleUrl = cp + "/photo/article.do?page=" + current_page;
 			String paging = util.paging(current_page, total_page, listUrl);
 			
 			req.setAttribute("list", list);
 			req.setAttribute("dataCount", dataCount);
-			req.setAttribute("articleUrl", articleUrl);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("paging", paging);
@@ -71,5 +72,35 @@ public class DeliveryServlet extends MyServlet {
 		forward(req, resp, path);
 	}
 	
+	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		DeliveryDAO dao = new DeliveryDAO();
+		
+		String cp = req.getContextPath();
+		
+		
+		try {
+			int orderNo = Integer.parseInt(req.getParameter("orderNo"));
+			dao.cancelOrder(orderNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "/delivery/list.do");
+	}
+	
+	protected void deliver(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		DeliveryDAO dao = new DeliveryDAO();
+		
+		String cp = req.getContextPath();
+		
+		try {
+			int orderNo = Integer.parseInt(req.getParameter("orderNo"));
+			dao.deliverOrder(orderNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "/delivery/list.do");
+	}
 	
 }
