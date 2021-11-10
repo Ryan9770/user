@@ -75,12 +75,38 @@ $(function () {
 });
 
 $(function() {
-	$(".Buybtn").click(function() {
-		var url = "${pageContext.request.contextPath}/buy/buymain.do";
-	
+	$(".Buybtn").click(function(){
+		var pNo = "${dto.pNo}";
+		var quantity = $("#result").text(); 
+		var price = "${dto.pPrice}";
+		if(quantity == 0){
+			return false;
+		}
+		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
+		
+		var url = "${pageContext.request.contextPath}/buy/buymain.do"+query;
+		
+		
 		location.href = url;
-	}
 	});
+	
+	$(".Cartbtn").click(function(){
+		var pNo = "${dto.pNo}";
+		var quantity = $("#result").text(); 
+		var price = "${dto.pPrice}";
+		if(quantity == 0){
+			return false;
+		}
+		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
+		
+		var url = "${pageContext.request.contextPath}"+query; // 장바구니로 보낼 주소 입력
+		
+		
+		location.href = url;
+	});
+	
+	
+	
 });
 </script>
 </head>
@@ -131,7 +157,7 @@ $(function() {
 							</tbody>
 						</table>
 					</div>
-					<div class="totalPrice"></div>
+					<div class="totalPrice">총 금액 : 0 원</div>
 					<div class="btnArea">
 	                    <button type="button" class="Cartbtn" >ADD CART</button>
 	                    <button type="button" class="Buybtn" >BUY NOW</button>

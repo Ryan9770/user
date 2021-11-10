@@ -122,7 +122,15 @@ function sendOk() {
     f.action = "${pageContext.request.contextPath}/product/${mode}_ok.do";
     f.submit();
 }
-
+<c:if test="${mode=='update'}">
+function deleteFile(pNo) {
+	if( !confirm("파일을 삭제하시겠습니까 ?") ) {
+		return;
+	}
+	var url = "${pageContext.request.contextPath}/product/deleteImage.do?pNo=" + pNo + "&page=${page}";
+	location.href = url;
+}
+</c:if>
 
 </script>
 </head>
@@ -138,12 +146,22 @@ function sendOk() {
 			<tr>
 				<td>카 테 고 리</td>
 				<td>
+				<c:choose>
+					<c:when test="${mode=='write'}">
 					<select name="pCategory_code">
 						<option value="">선택</option>
 					<c:forEach var="dto" items="${list}">
 						<option value="${dto.pCategory_code}">${dto.pCategory_name}</option>
 					</c:forEach>
 					</select>
+					</c:when>
+					<c:otherwise>
+					<select name="pCategory_code">
+						<option value="${dto.pCategory_code}">${dto.pCategory_name}</option>
+					</select>
+					</c:otherwise>
+				</c:choose>
+					
 				</td>
 			</tr>
 			
@@ -189,8 +207,8 @@ function sendOk() {
 						<td>등록이미지</td>
 						<td> 
 							<div class="img-box">
-								<c:forEach var="dto" items="">
-									<img src="${pageContext.request.contextPath}/uploads/Product/${dto.image_names}"
+								<c:forEach var="dto" items="${list}">
+									<img src="${pageContext.request.contextPath}/uploads/Product/${dto.image_name}"
 										onclick="deleteFile('${dto.imageNo}');">
 								</c:forEach>
 							</div>
