@@ -10,11 +10,18 @@ public class ProductDTO {
 	private int discount;
 	private String pCategory_code;
 	private String pCategory_name;
+	private String mId;
 
 	private int imageNo;
 	private String image_name;
 	private String[] image_names;
 	
+	public String getmId() {
+		return mId;
+	}
+	public void setmId(String mId) {
+		this.mId = mId;
+	}
 	public int getpNo() {
 		return pNo;
 	}

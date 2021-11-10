@@ -55,10 +55,11 @@ $(function() {
 		<ul class="category">
 			<li><a id="hideaction">카테고리</a>
 				<ul class="hidemenu">
-					<li><a>귀걸이</a></li>
-					<li><a href="${pageContext.request.contextPath}/product/list.do">목걸이</a></li>
-					<li><a>반지</a></li>
-					<li style="margin-bottom: 10px;"><a>팔찌</a></li>
+					<li><a href="${pageContext.request.contextPath}/product/list.do">전체보기</a></li>
+					<li><a href="${pageContext.request.contextPath}/product/list.do?pCategory_code=earring">귀걸이</a></li>
+					<li><a href="${pageContext.request.contextPath}/product/list.do?pCategory_code=necklace">목걸이</a></li>
+					<li><a href="${pageContext.request.contextPath}/product/list.do?pCategory_code=ring">반지</a></li>
+					<li><a href="${pageContext.request.contextPath}/product/list.do?pCategory_code=bracelet">팔찌</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -67,16 +68,16 @@ $(function() {
 			<li><a id="hideaction2">게시판</a>
 				<ul class="hidemenu2">
 					<li><a href="${pageContext.request.contextPath }/notice/list.do">공지사항</a></li>
-					<li style="margin-bottom: 10px;"><a href="${pageContext.request.contextPath }/qna/list.do">QnA</a></li>
+					<li style="margin-bottom: 10px;"><a href="${pageContext.request.contextPath }/qna/qna_list.do">QnA</a></li>
 				</ul>
 			</li>
 		</ul>
 		<c:if test="${sessionScope.member.userId=='admin'}">
 			<ul class="category admin">
 				<li><a>회원관리</a></li>
-				<li><a href="${pageContext.request.contextPath}/manage/list.do">재고관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/product/manage.do">재고관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/asale/list.do">판매현황</a></li>
-				<li><a href="${pageContext.request.contextPath}/delivery/list.do">배송관리</a></li>
+				<li><a>게시판관리</a></li>
 			</ul>
 		</c:if>
 		

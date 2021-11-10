@@ -25,143 +25,25 @@
 	
 <main>
 <div class="container">
-	<div class="category-title"><h1><span>NECKLACE</span></h1></div>
 	<div class="contents">
 		<ul class="prdList grid-box">
+		
+			<c:forEach var="dto" items="${list}" varStatus="status">
 			<li>
 				<div class="prdImg">
-					<a href="${pageContext.request.contextPath}/product/article.do"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
+					<a href="${articleUrl}&pNo=${dto.pNo}"><img src="${pageContext.request.contextPath}/uploads/product/${dto.image_name}"> </a>
 				</div>
 				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
+					<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdName"> 상품명 : </span><span> ${dto.pName} </span></a>
+					<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdPrice"> 상품가격 : </span><span> ${dto.pPrice} </span></a>
 				</div>
 			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
-		</ul>
-		<ul class="prdList grid-box">
-			<li>
-				<div class="prdImg">
-					<a href="#"><img src="${pageContext.request.contextPath}/resource/images/aa.jpg"></a>
-				</div>
-				<div class="description">
-					<a href="#"><span class="prdName">상품명 : </span><span>상품명</span></a>
-					<a href="#"><span class="prdPrice">상품가격 : </span><span>상품가격</span></a>
-				</div>
-			</li>
+			</c:forEach>
+		
 		</ul>	
 	</div>
 	<div class="page-box">
-			${paging}
+			${dataCount == 0 ? "등록된 게시물이 없습니다.": paging}
 	</div>
 </div>
 </main>

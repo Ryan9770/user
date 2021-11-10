@@ -78,6 +78,12 @@ function sendOk() {
     var f = document.addForm;
 	var str;
 	
+	str = f.pCategory_code.value;
+	if(!str){
+		alert("상품의 카테고리를 입력해 주세요.")
+		return;
+	}
+	
     str = f.pName.value.trim();
     if(!str) {
         alert("상품명을 입력하세요. ");
@@ -101,14 +107,14 @@ function sendOk() {
     
     str = f.pDesc.value.trim();
     if(!str) {
-        alert("상품수량을 입력하세요. ");
+        alert("상품설명을 입력하세요. ");
         f.pStock.focus();
         return;
     }
     
     var mode = "${mode}";
     if( (mode === "write") && (!f.selectFile.value) ) {
-        alert("이미지 파일을 추가 하세요. ");
+        alert("상품의 이미지 파일을 추가 하세요. ");
         f.selectFile.focus();
         return;
     }
@@ -117,16 +123,7 @@ function sendOk() {
     f.submit();
 }
 
-function changeEmail() {
-    var f = document.addForm;
-	    
-    var str = f.selectCategory.value;
-    if(str!="choice") {
-        f.category.value=str; 
-        f.category.readOnly = true;
-        f.category.focus(); 
-    }
-}
+
 </script>
 </head>
 <body>
@@ -141,13 +138,12 @@ function changeEmail() {
 			<tr>
 				<td>카 테 고 리</td>
 				<td>
-					  <select name="selectCategory" class="selectField" onchange="changeCategory();">
-							<option value="choice">선 택</option>
-							<option value="earring"   ${pCategory_name=="earring" ? "selected='selected'" : ""}>귀걸이</option>
-							<option value="necklace" ${pCategory_name=="necklace" ? "selected='selected'" : ""}>목걸이</option>
-							<option value="ring"   ${pCategory_name=="ring" ? "selected='selected'" : ""}>반지</option>
-							<option value="bracelet" ${pCategory_name=="bracelet" ? "selected='selected'" : ""}>팔찌</option>
-					  </select>
+					<select name="pCategory_code">
+						<option value="">선택</option>
+					<c:forEach var="dto" items="${list}">
+						<option value="${dto.pCategory_code}">${dto.pCategory_name}</option>
+					</c:forEach>
+					</select>
 				</td>
 			</tr>
 			
@@ -164,13 +160,18 @@ function changeEmail() {
 						<p><input type="text" name="pPrice" maxlength="100" class="boxTF" value="${dto.pPrice}" pattern="\d+"></p>
 					</td>
 				</tr>
-				
 				<tr> 
 					<td>수&nbsp;량</td>
 					<td> 
 						<p><input type="text" name="pStock" class="boxTA" pattern="\d+"></p>
 					</td>
 				</tr>
+				<!-- <tr> 
+					<td>할&nbsp;인&nbsp;률</td>
+					<td> 
+						<p><input type="text" name="Discount" class="boxTA" pattern="\d+"></p>
+					</td>
+				</tr> -->
 				<tr> 
 					<td>상&nbsp;품&nbsp;설&nbsp;명</td>
 					<td> 
@@ -183,6 +184,19 @@ function changeEmail() {
 						<input type="file" name="selectFile" accept="image/*" multiple="multiple" class="boxTF">
 					</td>
 				</tr>
+				<c:if test="${mode=='update'}">
+					<tr>
+						<td>등록이미지</td>
+						<td> 
+							<div class="img-box">
+								<c:forEach var="dto" items="">
+									<img src="${pageContext.request.contextPath}/uploads/Product/${dto.image_names}"
+										onclick="deleteFile('${dto.imageNo}');">
+								</c:forEach>
+							</div>
+						</td>
+					</tr>
+				</c:if>
 				
 			</table>
 				
