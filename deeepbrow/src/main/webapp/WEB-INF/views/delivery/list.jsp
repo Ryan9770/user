@@ -11,14 +11,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <style type="text/css">
-* {
-	margin: 0; padding: 0;
-    box-sizing: border-box;
+.title-body {
+	padding: 50px 0; text-align: center;
 }
 
-body {
-	font-size: 14px;
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+.title-body .article-title {
+	font-size: 20px;
 }
 
 a {
@@ -46,10 +44,10 @@ a:active, a:hover {
 }
 
 .table-stock {
-	width: 100%;
-	border-collapse: collapse;
+	width: 80%;
+	margin: 0 auto;
 	border-spacing: 0;
-	margin-bottom: 200px;
+	border-collapse: collapse;
 }
 
 
@@ -58,7 +56,14 @@ a:active, a:hover {
 }
 
 .table-stock thead tr:first-child{
+<<<<<<< HEAD
 	background: none;
+=======
+	border-top: 2px solid #ccc;
+	
+	line-height: 60px;
+	font-weight: 600;
+>>>>>>> branch 'main' of https://github.com/aadk1965/user.git
 }
 
 .table-stock thead th{
@@ -131,6 +136,10 @@ function deliverOrder(orderNo) {
  	<div class="title-body">
       <span class="article-title">주문 관리</span>
    </div>
+
+	<div class="title-body">
+		<span class="article-title">배송관리</span>
+	</div>
 	<table class="table-stock paginated">
 		<thead style="clear: both;">
 			<tr>

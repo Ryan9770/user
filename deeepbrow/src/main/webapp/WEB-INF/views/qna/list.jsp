@@ -40,9 +40,9 @@
 	font-weight: 600;
 }
 .subject {
-	width: 70%;
+	width: 50%;
 }
-.table-list td:nth-child(2) {
+.table-list td:nth-child(3) {
 	text-align: left;
 	padding-left: 20px;
 }
@@ -73,10 +73,6 @@
 </style>
 <script type="text/javascript">
 
-function searchList() {
-	var f = document.searchForm;
-	f.submit();
-}
 </script>
 </head>
 <body>
@@ -87,61 +83,8 @@ function searchList() {
 
 <main>
 <div class="container">
-<<<<<<< HEAD
-	<div id="content">
-		<table class="table">
-				<thead class="">
-					<tr class="tablepadd">
-						<th> No</th>
-						<th>SUBJECT</th>
-						<th>NAME</th>
-						<th>DATE</th>
-					</tr>
-				</thead>
-			<tbody class="test">
-				<tr class="tablepadd2">
-					<td>공지</td>
-					<td>[필독] Notice</td>
-					<td>딥브로우</td>
-					<td>2021-11-02</td>
-				</tr>
-				
-				<tr class="tablepadd2">
-					<td>7</td>
-					<td>[이벤트] 여름 휴가</td>
-					<td>딥브로우</td>
-					<td>2021-11-02</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<div style="min-height: 50px;">
-			<form action="">
-				<div class="second">
-						<div>
-						<select>
-							<option>전체</option>
-						</select>
-						<select>
-							<option>제목 + 내용</option>
-						</select>
-						<input class="textstyle" type="text" placeholder=" &nbsp;&nbsp;&nbsp;&nbsp;내용 입력">
-						<a style="font-weight: 50px;">SEARCH</a>
-					</div>
-				</div>
-				<div class="third">
-					<a href="#"><i>Previous</i></a>
-					&nbsp;
-					<a href="#">1</a>
-					&nbsp;
-					<a href="#"><i>Next</i></a>
-				</div>
-			</form>
-		</div>
-=======
 	<div class="title-body">
-		<span class="article-title">공지사항</span>
->>>>>>> branch 'main' of https://github.com/aadk1965/user.git
+		<span class="article-title">QnA</span>
 	</div>
 	<table class="table" style="text-align: left;">
 		<tr>
@@ -154,20 +97,20 @@ function searchList() {
 		<table class="table table-list">
 			<tr>
 				<th>No</th>
+				<th>PRODUCT</th>
 				<th class="subject">SUBJECT</th>
 				<th>NAME</th>
 				<th>DATE</th>
 			</tr>
-			<c:forEach items="${list}" var="dto">
 			<tr>
-				<td>${dto.listNum}</td>
+				<td>1</td>
+				<td>이미지</td>
 				<td>
-					<a href="${articleUrl}&nNo=${dto.nNo}">${dto.nSubject}</a>
+					<a href="${articleUrl}&nNo=${dto.nNo}">배송언제?</a>
 				</td>
-				<td>관리자</td>
-				<td>${dto.nReg_date}</td>
+				<td>ㅁㅁㅁ</td>
+				<td>2021-11-11</td>
 			</tr>
-			</c:forEach>
 			
 		</table>
 	</form>
@@ -191,8 +134,8 @@ function searchList() {
 					</form>
 				</td>
 				<td align="right" width="100">
-					<c:if test="${sessionScope.member.userId == 'admin'}">
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/write.do?rows=${rows}';">글올리기</button>
+					<c:if test="${sessionScope.member.userId != 'admin'}">
+						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/write.do?rows=${rows}';">글올리기</button>
 					</c:if>
 				</td>
 			</tr>

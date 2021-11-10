@@ -11,11 +11,78 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/article.css" type="text/css">
+<script src="https://kit.fontawesome.com/42044ce0be.js" crossorigin="anonymous"></script>
 <style type="text/css">
-
+.quantityBtnplus{
+	margin: 10px auto;
+	color : #fff;
+	background: none;
+}
+.quantityBtnminus{
+	margin: 10px auto;
+	color : #fff;
+	background: none;
+}
+#result{
+	 background: #fff; 
+	 float: left; 
+	 width: 20px; 
+	 color: #000; 
+	 margin-top: 10px;
+	 margin-bottom: 10px;
+	 margin-right: 15px;
+}
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+function count(type)  {
+	 
+	  var resultElement = document.getElementById('result');
+	  
+	  var number = resultElement.innerText;
+	  
 
+	  if(type === 'plus') {
+	    number = parseInt(number) + 1;
+	  }else if(type === 'minus' && number == 0){
+		 return false;
+	  }else if(type === 'minus')  {
+	    number = parseInt(number) - 1;
+	  }
+	  
 
+	  resultElement.innerText = number;
+}
+
+$(function () {
+	$(".quantityBtnplus").click(function() {
+		var quantity = $("#result").text();
+		var price = $(".price").text();
+		
+		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
+		
+		$(".totalPrice").html(s);
+	});
+	
+	$(".quantityBtnminus").click(function() {
+		var quantity = $("#result").text();
+		var price = $(".price").text();
+		
+		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
+		
+		$(".totalPrice").html(s);
+	});
+});
+
+$(function() {
+	$(".Buybtn").click(function() {
+		var url = "${pageContext.request.contextPath}/buy/buymain.do";
+	
+		location.href = url;
+	}
+	});
+});
+</script>
 </head>
 <body>
 
@@ -28,23 +95,23 @@
 	<div class="contents">
 		<div class="prd">
 			<div class="item1">
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/1.jpg"></p>
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/2.jpg"></p>
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/3.jpg"></p>
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/4.jpg"></p>
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/5.jpg"></p>
-				<p class="txal-center"><img src="${pageContext.request.contextPath}/resource/images/6.jpg"></p>
+			<c:forEach var="dto" items="${listProduct}">
+				<p class="txal-center"><img src="${pageContext.request.contextPath}/uploads/product/${dto.image_name}"></p>
+			</c:forEach>
 			</div>
 			<div class="item2">
 				<div class="prdDetail">
 					<div class="prdInfo">
 						<table>
-							<tbody style="float: left;">
+							<tbody>
 								<tr>
-									<td><span class="prdName">my dia flower and heart necklace (silver 925)</span></td>
+									<td><span class="prdName">상품명 : <b>${dto.pName}</b></span></td>
 								</tr>
 								<tr>
-									<td><span class="prdPrice">150,000</span></td>
+									<td><span class="prdPrice">가격 : <b class="price">${dto.pPrice}</b></span></td>
+								</tr>
+								<tr>
+									<td><span class="prdDesc">설명 : <b>${dto.pDesc}</b></span></td>
 								</tr>
 							</tbody>
 						</table>	
@@ -54,25 +121,20 @@
 							<tbody>
 								<tr>
 									<td>
-	                                	<span class="quantity">
-		                                    <input id="quantity" value="1" type="text">
-		                                    <a href="#"><span>▲</span></a>
-		                                    <a href="#"><span>▼</span></a>
+	                                	<span class="quantity">		                                    
+											<div id='result'>0</div>
+		                                    <input class="quantityBtnplus" type='button' onclick='count("plus")' value='△'/>
+		                                    <input class="quantityBtnminus" type='button' onclick='count("minus")' value='▽'/>
 	                                	</span>
                             		</td>
-	                            <td class="right">
-									<span class="quantity_price">150,000 원</span>
-								</td>
-                        	</tr></tbody>
+                        		</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="totalPrice">
-					
-					</div>
+					<div class="totalPrice"></div>
 					<div class="btnArea">
-	                    <button type="button" class="btn1">ADD CART</button>
-	                    <button type="button" class="btn2">BUY NOW</button>
+	                    <button type="button" class="Cartbtn" >ADD CART</button>
+	                    <button type="button" class="Buybtn" >BUY NOW</button>
                 	</div>
 				</div>
 			</div>
@@ -80,7 +142,7 @@
 		</div>
 		
 		<div class="review-box">
-			<div class="review-top"><h3 style="float: left;">REVIEW</h3><button type="button" class="btn btnWrite" style="float: right;">WRITE</button></div>
+			<div class="review-top"><h3 style="float: left;">REVIEW</h3><button type="button" class="btn btnWrite" onclick="" style="float: right;">WRITE</button></div>
 			<div class="review-board">리뷰가 없습니다</div>
 		</div>
 	</div>
