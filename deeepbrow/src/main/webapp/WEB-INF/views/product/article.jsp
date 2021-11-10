@@ -13,12 +13,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/article.css" type="text/css">
 <script src="https://kit.fontawesome.com/42044ce0be.js" crossorigin="anonymous"></script>
 <style type="text/css">
-.quantityBtn{
+.quantityBtnplus{
 	margin: 10px auto;
 	color : #fff;
 	background: none;
 }
-
+.quantityBtnminus{
+	margin: 10px auto;
+	color : #fff;
+	background: none;
+}
 #result{
 	 background: #fff; 
 	 float: left; 
@@ -29,6 +33,7 @@
 	 margin-right: 15px;
 }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 function count(type)  {
 	 
@@ -49,14 +54,34 @@ function count(type)  {
 	  resultElement.innerText = number;
 }
 
-function cartOk() {
+$(function () {
+	$(".quantityBtnplus").click(function() {
+		var quantity = $("#result").text();
+		var price = $(".price").text();
+		
+		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
+		
+		$(".totalPrice").html(s);
+	});
 	
-}
+	$(".quantityBtnminus").click(function() {
+		var quantity = $("#result").text();
+		var price = $(".price").text();
+		
+		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
+		
+		$(".totalPrice").html(s);
+	});
+});
 
-function cartOk() {
+$(function() {
+	$(".Buybtn").click(function() {
+		var url = "${pageContext.request.contextPath}/buy/buymain.do";
 	
-}
-
+		location.href = url;
+	}
+	});
+});
 </script>
 </head>
 <body>
@@ -78,15 +103,15 @@ function cartOk() {
 				<div class="prdDetail">
 					<div class="prdInfo">
 						<table>
-							<tbody style="float: left;">
+							<tbody>
 								<tr>
-									<td><span class="prdName">상품명 : ${dto.pName}</span></td>
+									<td><span class="prdName">상품명 : <b>${dto.pName}</b></span></td>
 								</tr>
 								<tr>
-									<td><span class="prdPrice">가격 : ${dto.pPrice}</span></td>
+									<td><span class="prdPrice">가격 : <b class="price">${dto.pPrice}</b></span></td>
 								</tr>
 								<tr>
-									<td><span class="prdDesc">설명 : ${dto.pDesc}</span></td>
+									<td><span class="prdDesc">설명 : <b>${dto.pDesc}</b></span></td>
 								</tr>
 							</tbody>
 						</table>	
@@ -98,23 +123,18 @@ function cartOk() {
 									<td>
 	                                	<span class="quantity">		                                    
 											<div id='result'>0</div>
-		                                    <input class="quantityBtn" type='button' onclick='count("plus")' value='△'/>
-		                                    <input class="quantityBtn" type='button' onclick='count("minus")' value='▽'/>
+		                                    <input class="quantityBtnplus" type='button' onclick='count("plus")' value='△'/>
+		                                    <input class="quantityBtnminus" type='button' onclick='count("minus")' value='▽'/>
 	                                	</span>
                             		</td>
-	                            <td class="right">
-									<div class="quantity_price"></div>
-								</td>
-                        	</tr></tbody>
+                        		</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="totalPrice">
-					0
-					</div>
+					<div class="totalPrice"></div>
 					<div class="btnArea">
-	                    <button type="button" class="btn1" onclick="cartOk()">ADD CART</button>
-	                    <button type="button" class="btn2" onclick="buyOk()">BUY NOW</button>
+	                    <button type="button" class="Cartbtn" >ADD CART</button>
+	                    <button type="button" class="Buybtn" >BUY NOW</button>
                 	</div>
 				</div>
 			</div>
