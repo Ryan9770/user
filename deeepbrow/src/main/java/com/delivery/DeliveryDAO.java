@@ -159,4 +159,63 @@ public class DeliveryDAO {
 		
 		return result;
 	}
+	
+	public DeliveryDTO readOrder(int orderNo) {
+		DeliveryDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT po.orderNo, po.order_date, po.pay_date, po.pay_price, po.mId, "
+					+ "dName, dTel, dZipCode, dAddr1, dAddr2, del_memo, delNo, ds_manage "
+					+ "FROM delivery d "
+					+ "JOIN product_order po ON d.orderNo = po.orderNo "
+					+ "JOIN delivery_status ds ON d.orderNo = ds.orderNo "
+					+ "WHERE po.orderNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, orderNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new DeliveryDTO();
+				
+				dto.setOrderNo(rs.getInt("orderNo"));
+				dto.setOrder_date(rs.getString("order_date"));
+				dto.setPay_date(rs.getString("pay_date"));
+				dto.setPay_price(rs.getInt("pay_price"));
+				dto.setmId(rs.getString("mId"));
+				dto.setdName(rs.getString("dName"));
+				dto.setdTel(rs.getString("dTel"));
+				dto.setdZipCode(rs.getString("dZipCode"));
+				dto.setdAddr1(rs.getString("dAddr1"));
+				dto.setdAddr2(rs.getString("dAddr2"));
+				dto.setDel_memo(rs.getString("del_memo"));
+				dto.setDelNo(rs.getString("delNo"));
+				dto.setDs_manage(rs.getString("ds_manage"));
+			}
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
 }

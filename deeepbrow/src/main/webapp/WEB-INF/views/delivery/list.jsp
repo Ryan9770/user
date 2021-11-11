@@ -56,14 +56,10 @@ a:active, a:hover {
 }
 
 .table-stock thead tr:first-child{
-<<<<<<< HEAD
 	background: none;
-=======
 	border-top: 2px solid #ccc;
-	
-	line-height: 60px;
+	line-height: 30px;
 	font-weight: 600;
->>>>>>> branch 'main' of https://github.com/aadk1965/user.git
 }
 
 .table-stock thead th{
@@ -124,6 +120,11 @@ function deliverOrder(orderNo) {
     }   
 }
 
+function showDetails(orderNo) {
+	var url = "${pageContext.request.contextPath}/delivery/orderDetails.do?orderNo="+orderNo;
+	location.href = url;
+}
+
 </script>
 
 </head>
@@ -136,10 +137,6 @@ function deliverOrder(orderNo) {
  	<div class="title-body">
       <span class="article-title">주문 관리</span>
    </div>
-
-	<div class="title-body">
-		<span class="article-title">배송관리</span>
-	</div>
 	<table class="table-stock paginated">
 		<thead style="clear: both;">
 			<tr>
@@ -147,13 +144,10 @@ function deliverOrder(orderNo) {
 				<th width="100" class="stockclass">주문일자</th>
 				<th width="100" class="stockclass">결제일자</th>
 				<th width="100" class="stockclass">결제금액</th>
-				<th width="100" class="stockclass">회원아이디</th>
+				<th width="100" class="stockclass">아이디</th>
 				<th width="100" class="stockclass">이름</th>
 				<th width="200" class="stockclass">전화번호</th>
-				<th width="100" class="stockclass">우편번호</th>
-				<th width="200" class="stockclass">기본주소</th>
-				<th width="200" class="stockclass">상세주소</th>
-				<th width="200" class="stockclass">배송메모</th>
+				
 				<th width="100" class="stockclass">송장번호</th>
 				<th width="100" class="stockclass">주문상태</th>
 				<th width="100" class="stockclass">주문취소</th>
@@ -164,22 +158,17 @@ function deliverOrder(orderNo) {
 		<tbody>
 			<c:forEach var="dto" items="${list}">
 				<tr>
-					<td><a href="javascript:showDetails('${dto.orderNo}');">${dto.orderNo}</a></td>
+					<td style="text-decoration:underline; color: purple;"><a href="javascript:showDetails('${dto.orderNo}');">${dto.orderNo}</a></td>
 					<td>${dto.order_date}</td>
 					<td>${dto.pay_date}</td>
 					<td>${dto.pay_price}원</td>
 					<td>${dto.mId}</td>
 					<td>${dto.dName}</td>
 					<td>${dto.dTel}</td>
-					<td>${dto.dZipCode}</td>
-					<td>${dto.dAddr1}</td>
-					<td>${dto.dAddr2}</td>
-					<td>${dto.del_memo}</td>
+					
 					<td>${dto.delNo}</td>
 					
 					<td>${empty dto.ds_manage ? '배송준비중' : dto.ds_manage}</td>
-					
-					
 					
 					<td>
 						<c:if test="${empty dto.ds_manage}">

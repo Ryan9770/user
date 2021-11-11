@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.member.SessionInfo;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
@@ -26,6 +29,8 @@ public class DeliveryServlet extends MyServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("delivered_order.do") != -1) {
 			deliver(req, resp);
+		} else if(uri.indexOf("orderDetails.do") != -1) {
+			showDetails(req, resp);
 		}
 	}
 	
@@ -103,4 +108,33 @@ public class DeliveryServlet extends MyServlet {
 		resp.sendRedirect(cp + "/delivery/list.do");
 	}
 	
+	protected void showDetails(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		DeliveryDAO dao = new DeliveryDAO();
+		MyUtil util = new MyUtil();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {
+			int orderNo = Integer.parseInt(req.getParameter("orderNo"));
+			String query = "orderNo=" + orderNo;
+			
+			DeliveryDTO dto = dao.readOrder(orderNo);
+			if(dto == null) {
+				resp.sendRedirect(cp + "/delivery/list.do?" + query);
+				return;
+			}
+			
+			req.setAttribute("dto", dto);
+			
+			forward(req, resp, "/WEB-INF/views/delivery/orderDetails.jsp");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// resp.sendRedirect(cp + "/delivery/list.do");
+	}
 }
