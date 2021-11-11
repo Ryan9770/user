@@ -87,61 +87,8 @@ function searchList() {
 
 <main>
 <div class="container">
-<<<<<<< HEAD
-	<div id="content">
-		<table class="table">
-				<thead class="">
-					<tr class="tablepadd">
-						<th> No</th>
-						<th>SUBJECT</th>
-						<th>NAME</th>
-						<th>DATE</th>
-					</tr>
-				</thead>
-			<tbody class="test">
-				<tr class="tablepadd2">
-					<td>공지</td>
-					<td>[필독] Notice</td>
-					<td>딥브로우</td>
-					<td>2021-11-02</td>
-				</tr>
-				
-				<tr class="tablepadd2">
-					<td>7</td>
-					<td>[이벤트] 여름 휴가</td>
-					<td>딥브로우</td>
-					<td>2021-11-02</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<div style="min-height: 50px;">
-			<form action="">
-				<div class="second">
-						<div>
-						<select>
-							<option>전체</option>
-						</select>
-						<select>
-							<option>제목 + 내용</option>
-						</select>
-						<input class="textstyle" type="text" placeholder=" &nbsp;&nbsp;&nbsp;&nbsp;내용 입력">
-						<a style="font-weight: 50px;">SEARCH</a>
-					</div>
-				</div>
-				<div class="third">
-					<a href="#"><i>Previous</i></a>
-					&nbsp;
-					<a href="#">1</a>
-					&nbsp;
-					<a href="#"><i>Next</i></a>
-				</div>
-			</form>
-		</div>
-=======
 	<div class="title-body">
 		<span class="article-title">공지사항</span>
->>>>>>> branch 'main' of https://github.com/aadk1965/user.git
 	</div>
 	<table class="table" style="text-align: left;">
 		<tr>

@@ -39,8 +39,20 @@
 	line-height: 60px;
 	font-weight: 600;
 }
-.subject {
-	width: 50%;
+.no {
+	width: 5%;
+}
+.product {
+	width: 20%;
+}
+.subject{
+	width: 55%;
+}
+.name{
+	width: 10%;
+}
+.date{
+	width: 10%;
 }
 .table-list td:nth-child(3) {
 	text-align: left;
@@ -96,21 +108,26 @@
 	<form name="noticelistForm">
 		<table class="table table-list">
 			<tr>
-				<th>No</th>
-				<th>PRODUCT</th>
+				<th class="no">No</th>
+				<th class="product">PRODUCT</th>
 				<th class="subject">SUBJECT</th>
-				<th>NAME</th>
-				<th>DATE</th>
+				<th class="name">NAME</th>
+				<th class="date">DATE</th>
 			</tr>
+			<c:forEach items="${list}" var="dto">
 			<tr>
-				<td>1</td>
-				<td>이미지</td>
+				<td>${dto.listNum}</td>
 				<td>
-					<a href="${articleUrl}&nNo=${dto.nNo}">배송언제?</a>
+					<img src="${pageContext.request.contextPath}/resource/images/product.jpg" width="30px" style="vertical-align: middle;">제품ddddddddcsdfsdfd
+					<c:if test="${dto.replyCount!=0}"> (답변완료) </c:if>
 				</td>
-				<td>ㅁㅁㅁ</td>
-				<td>2021-11-11</td>
+				<td>
+					<a href="${articleUrl}&qNo=${dto.qNo}">${dto.qSubject}</a>
+				</td>
+				<td>${dto.mId}</td>
+				<td>${dto.qReg_date}</td>
 			</tr>
+			</c:forEach>
 			
 		</table>
 	</form>

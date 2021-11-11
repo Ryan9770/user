@@ -6,8 +6,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>deeepbrow</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
 <style type="text/css">
 .title-body {
 	padding: 50px 0; text-align: center;
@@ -55,8 +56,46 @@
 .table td:nth-child(2) {
 	text-align: left;
 }
-
 </style>
+
+<style type="text/css">
+/* 모달대화상자 */
+.ui-widget-header { /* 타이틀바 */
+	background: none;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	border-radius: 0;
+}
+.ui-dialog .ui-dialog-title {
+	padding-top: 5px; padding-bottom: 5px;
+}
+.ui-widget-content { /* 내용 */
+   /* border: none; */
+   border-color: #ccc; 
+}
+</style>
+
+
+</head>
+<body>
+
+<header>
+    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
+</header>
+<main>
+
+<script type="text/javascript">
+$(function(){
+	$(".productPick").click(function() {
+		$(".modal-dialog").dialog({
+			modal:true,
+			width:600,
+			height:500
+		});
+	});
+});
+
+</script>
 <script type="text/javascript">
 function sendOk() {
     var f = document.noticeForm;
@@ -80,13 +119,7 @@ function sendOk() {
     f.submit();
 }
 </script>
-</head>
-<body>
 
-<header>
-    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
-</header>
-<main>
 <div class="container">
 	<div class="title-body">
 			<span class="article-title">QnA</span>
@@ -94,43 +127,68 @@ function sendOk() {
 	<form name="noticeForm" method="post">
 		<table class="table table-list">
 			<tr>
-					<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
-					<td> 
-						<input type="text" name="nSubject" maxlength="100" class="boxTF" value="${dto.qSubject}">
-					</td>
-				</tr>
+				<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+				<td> 
+					<input type="text" name="nSubject" maxlength="100" class="boxTF" value="${dto.qSubject}">
+				</td>
+			</tr>
 
-				<tr> 
-					<td>작성자</td>
-					<td> 
-						<p>${sessionScope.member.userName}</p>
-					</td>
-				</tr>
+			<tr> 
+				<td>작성자</td>
+				<td> 
+					<p>${sessionScope.member.userName}</p>
+				</td>
+			</tr>
+			
+			<tr> 
+				<td>문의 카테고리</td>
+				<td> 
+					<select name="question" class="selectField" >
+						<option value="" selected="selected" hidden="hidden">질문유형을 선택해 주세요</option>
+						<option value="product"      ${question=="product"?"selected='selected'":"" }>상품 문의</option>
+						<option value="delivery"  ${question=="delivery"?"selected='selected'":"" }>배송 문의</option>
+						<option value="change"  ${question=="change"?"selected='selected'":"" }>교환/반품/취소</option>
+						<option value="etc"  ${question=="etc"?"selected='selected'":"" }>기타</option>
+					</select>
+				</td>
+			</tr>
 				
-				<tr> 
-					<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
-					<td> 
-						<textarea name="nContent" class="boxTA" style="height: 200px;">${dto.qContent}</textarea>
-					</td>
-				</tr>
+			<tr> 
+				<td>상품 번호</td>
+				<td> 
+					<button class="btn productPick">상품 선택</button>
+				</td>
+			</tr>
+				
+			<tr> 
+				<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+				<td> 
+					<textarea name="nContent" class="boxTA" style="height: 200px;">${dto.qContent}</textarea>
+				</td>
+			</tr>
 		</table>
 		
 		<table class="table">
-				<tr> 
-					<td align="center">
-						<button type="button" class="btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
-						<button type="reset" class="btn">다시입력</button>
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/list.do?rows=${rows}';">${mode=='update'?'수정취소':'등록취소'}</button>
-						<input type="hidden" name="rows" value="${rows}">
-						<c:if test="${mode=='update'}">
-							<input type="hidden" name="num" value="${dto.nNo}">
-							<input type="hidden" name="page" value="${page}">
-						</c:if>
-					</td>
-				</tr>
-			</table>
+			<tr> 
+				<td align="center">
+					<button type="button" class="btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
+					<button type="reset" class="btn">다시입력</button>
+					<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/list.do?rows=${rows}';">${mode=='update'?'수정취소':'등록취소'}</button>
+					<input type="hidden" name="rows" value="${rows}">
+					<c:if test="${mode=='update'}">
+						<input type="hidden" name="nNo" value="${dto.nNo}">
+						<input type="hidden" name="page" value="${page}">
+					</c:if>
+				</td>
+			</tr>
+		</table>
 	</form>
 </div>
+
+<div class="modal-dialog" style="display: none;">
+	<p>내용</p>
+</div>
+
 </main>
 
 <footer>

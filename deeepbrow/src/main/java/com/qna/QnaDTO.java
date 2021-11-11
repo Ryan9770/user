@@ -7,7 +7,10 @@ public class QnaDTO {
 	private String qReg_date;
 	private String qCategory;
 	private String mId;
-	private String pNo;
+	private int pNo;
+	
+	private int replyCount;
+	private String imageFilename;
 	
 	public int getqNo() {
 		return qNo;
@@ -42,13 +45,13 @@ public class QnaDTO {
 	public String getmId() {
 		return mId;
 	}
-	public void setmNo(String mId) {
+	public void setmId(String mId) {
 		this.mId = mId;
 	}
-	public String getpNo() {
+	public int getpNo() {
 		return pNo;
 	}
-	public void setpNo(String pNo) {
+	public void setpNo(int pNo) {
 		this.pNo = pNo;
 	}
 	public int getListNum() {
@@ -57,6 +60,20 @@ public class QnaDTO {
 	public void setListNum(int listNum) {
 		this.listNum = listNum;
 	}
+	public int getReplyCount() {
+		return replyCount;
+	}
+	public void setReplyCount(int replyCount) {
+		this.replyCount = replyCount;
+	}
+	public String getImageFilename() {
+		return imageFilename;
+	}
+	public void setImageFilename(String imageFilename) {
+		this.imageFilename = imageFilename;
+	}
+	
+	
 	
 	
 }
