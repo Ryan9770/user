@@ -112,72 +112,72 @@ function memberOk() {
 	var f = document.memberForm;
 	var str;
 
-	str = f.userId.value;
+	str = f.mId.value;
 	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
 		alert("아이디를 다시 입력 하세요. ");
-		f.userId.focus();
+		f.mId.focus();
 		return;
 	}
 
-	str = f.userPwd.value;
+	str = f.mPassword.value;
 	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
 		alert("패스워드를 다시 입력 하세요. ");
-		f.userPwd.focus();
+		f.mPassword.focus();
 		return;
 	}
 
-	if( str != f.userPwd2.value ) {
+	if( str != f.mPassword2.value ) {
         alert("패스워드가 일치하지 않습니다. ");
-        f.userPwd.focus();
+        f.mPassword.focus();
         return;
 	}
 	
-    str = f.userName.value;
+    str = f.mName.value;
     if( !/^[가-힣]{2,5}$/.test(str) ) {
         alert("이름을 다시 입력하세요. ");
-        f.userName.focus();
+        f.mName.focus();
         return;
     }
 
-    str = f.birth.value;
+    str = f.mBirth.value;
     if( !str ) {
         alert("생년월일를 입력하세요. ");
-        f.birth.focus();
+        f.mBirth.focus();
         return;
     }
     
-    str = f.tel1.value;
+    str = f.mTel1.value;
     if( !str ) {
         alert("전화번호를 입력하세요. ");
-        f.tel1.focus();
+        f.mTel1.focus();
         return;
     }
 
-    str = f.tel2.value;
+    str = f.mTel2.value;
     if( !/^\d{3,4}$/.test(str) ) {
         alert("숫자만 가능합니다. ");
-        f.tel2.focus();
+        f.mTel2.focus();
         return;
     }
 
-    str = f.tel3.value;
+    str = f.mTel3.value;
     if( !/^\d{4}$/.test(str) ) {
     	alert("숫자만 가능합니다. ");
-        f.tel3.focus();
+        f.mTel3.focus();
         return;
     }
     
-    str = f.email1.value.trim();
+    str = f.mEmail1.value.trim();
     if( !str ) {
         alert("이메일을 입력하세요. ");
-        f.email1.focus();
+        f.mEmail1.focus();
         return;
     }
 
-    str = f.email2.value.trim();
+    str = f.mEmail2.value.trim();
     if( !str ) {
         alert("이메일을 입력하세요. ");
-        f.email2.focus();
+        f.mEmail2.focus();
         return;
     }
 
@@ -190,17 +190,52 @@ function changeEmail() {
 	    
     var str = f.selectEmail.value;
     if(str!="direct") {
-        f.email2.value=str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
+        f.mEmail2.value=str; 
+        f.mEmail2.readOnly = true;
+        f.mEmail1.focus(); 
     }
     else {
-        f.email2.value="";
-        f.email2.readOnly = false;
-        f.email1.focus();
+        f.mEmail2.value="";
+        f.mEmail2.readOnly = false;
+        f.mEmail1.focus();
     }
 }
 
+function userIdCheck() {
+	var mId = $("#mId").val();
+	
+	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(mId) ) { 
+		var str = "아이디는 5~10자 이내이며, 첫글자는 영문자로 시작합니다.";
+		$("#mId").focus();
+		$("#mId").parent().next(".help-block").html(str);
+		return false;
+	}
+	
+	var url = "${pageContext.request.contextPath}/member/userIdCheck.do";
+	var query = "mId="+mId;
+	
+	$.ajax({
+		type:"post",
+		url:url,
+		data:query,
+		dataType:"json",
+		success:function(data) {
+			var passed = data.passed;
+			
+			if(passed === "true") {
+				var str = "<span style='color:blue;font-weight:600;'>"+mId+"</span>아이디는 사용 가능합니다.";
+				$("#mId").parent().next(".help-block").html(str);
+				$("#mIdValid").val("true");
+			} else {
+				var str = "<span style='color:red;font-weight:600;'>"+mId+"</span>아이디는 사용 불가능합니다.";
+				$("#mId").parent().next(".help-block").html(str);
+				$("#mIdValid").val("false");
+				$("#mId").val("");
+				$("#mId").focus();
+			}
+		}
+	});
+}
 </script>
 </head>
 <body>
@@ -213,7 +248,7 @@ function changeEmail() {
 <div class="container">
 
 		<div class="title-body">
-			<span class="article-title">회원가입</span>
+			<span class="article-title">${title}</span>
 		</div>
 		
 		<form name="memberForm" method="post">
@@ -222,7 +257,10 @@ function changeEmail() {
 				<td>아&nbsp;이&nbsp;디</td>
 				<td>
 					<p>
-						<input type="text" name="userId" id="userId" maxlength="10" class="boxTF" value="${dto.userId}" style="width: 50%;" ${mode=="update" ? "readonly='readonly' ":""}>
+						<input type="text" name="mId" id="mId" maxlength="10" class="boxTF" 
+							value="${dto.mId}" 
+							style="width: 50%;" ${mode=="update" ? "readonly='readonly' ":""}
+							onchange="userIdCheck()">
 					</p>
 					<p class="help-block">아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.</p>
 				</td>
@@ -232,7 +270,7 @@ function changeEmail() {
 				<td>패스워드</td>
 				<td>
 					<p>
-						<input type="password" name="userPwd" class="boxTF" maxlength="10" style="width: 50%;">
+						<input type="password" name="mPassword" class="boxTF" maxlength="10" style="width: 50%;">
 					</p>
 					<p class="help-block">패스워드는 5~10자 이내이며, 하나 이상의 숫자나 특수문자가 포함되어야 합니다.</p>
 				</td>
@@ -242,7 +280,7 @@ function changeEmail() {
 				<td>패스워드 확인</td>
 				<td>
 					<p>
-						<input type="password" name="userPwd2" class="boxTF" maxlength="10" style="width: 50%;">
+						<input type="password" name="mPassword2" class="boxTF" maxlength="10" style="width: 50%;">
 					</p>
 					<p class="help-block">패스워드를 한번 더 입력해주세요.</p>
 				</td>
@@ -251,14 +289,14 @@ function changeEmail() {
 			<tr>
 				<td>이&nbsp;&nbsp;&nbsp;&nbsp;름</td>
 				<td>
-					<input type="text" name="userName" maxlength="10" class="boxTF" value="${dto.userName}" style="width: 50%;" ${mode=="update" ? "readonly='readonly' ":""}>
+					<input type="text" name="mName" maxlength="10" class="boxTF" value="${dto.mName}" style="width: 50%;" ${mode=="update" ? "readonly='readonly' ":""}>
 				</td>
 			</tr>
 		
 			<tr>
 				<td>생년월일</td>
 				<td>
-					<input type="date" name="birth" class="boxTF" value="${dto.birth}" style="width: 50%;">
+					<input type="date" name="mBirth" class="boxTF" value="${dto.mBirth}" style="width: 50%;">
 				</td>
 			</tr>
 		
@@ -267,51 +305,51 @@ function changeEmail() {
 				<td>
 					  <select name="selectEmail" class="selectField" onchange="changeEmail();">
 							<option value="">선 택</option>
-							<option value="naver.com"   ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
-							<option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
-							<option value="gmail.com"   ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
-							<option value="hotmail.com" ${dto.email2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
+							<option value="naver.com"   ${dto.mEmail2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
+							<option value="hanmail.net" ${dto.mEmail2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
+							<option value="gmail.com"   ${dto.mEmail2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
+							<option value="hotmail.com" ${dto.mEmail2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
 							<option value="direct">직접입력</option>
 					  </select>
-					  <input type="text" name="email1" maxlength="30" class="boxTF" value="${dto.email1}" style="width: 33%;"> @ 
-					  <input type="text" name="email2" maxlength="30" class="boxTF" value="${dto.email2}" style="width: 33%;" readonly="readonly">
+					  <input type="text" name="mEmail1" maxlength="30" class="boxTF" value="${dto.mEmail1}" style="width: 33%;"> @ 
+					  <input type="text" name="mEmail2" maxlength="30" class="boxTF" value="${dto.mEmail2}" style="width: 33%;" readonly="readonly">
 				</td>
 			</tr>
 			
 			<tr>
 				<td>전화번호</td>
 				<td>
-					  <select name="tel1" class="selectField">
+					  <select name="mTel1" class="selectField">
 							<option value="">선 택</option>
-							<option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
-							<option value="02"  ${dto.tel1=="02"  ? "selected='selected'" : ""}>02</option>
-							<option value="031" ${dto.tel1=="031" ? "selected='selected'" : ""}>031</option>
-							<option value="032" ${dto.tel1=="032" ? "selected='selected'" : ""}>032</option>
-							<option value="033" ${dto.tel1=="033" ? "selected='selected'" : ""}>033</option>
-							<option value="041" ${dto.tel1=="041" ? "selected='selected'" : ""}>041</option>
-							<option value="042" ${dto.tel1=="042" ? "selected='selected'" : ""}>042</option>
-							<option value="043" ${dto.tel1=="043" ? "selected='selected'" : ""}>043</option>
-							<option value="044" ${dto.tel1=="044" ? "selected='selected'" : ""}>044</option>
-							<option value="051" ${dto.tel1=="051" ? "selected='selected'" : ""}>051</option>
-							<option value="052" ${dto.tel1=="052" ? "selected='selected'" : ""}>052</option>
-							<option value="053" ${dto.tel1=="053" ? "selected='selected'" : ""}>053</option>
-							<option value="054" ${dto.tel1=="054" ? "selected='selected'" : ""}>054</option>
-							<option value="055" ${dto.tel1=="055" ? "selected='selected'" : ""}>055</option>
-							<option value="061" ${dto.tel1=="061" ? "selected='selected'" : ""}>061</option>
-							<option value="062" ${dto.tel1=="062" ? "selected='selected'" : ""}>062</option>
-							<option value="063" ${dto.tel1=="063" ? "selected='selected'" : ""}>063</option>
-							<option value="064" ${dto.tel1=="064" ? "selected='selected'" : ""}>064</option>
-							<option value="070" ${dto.tel1=="070" ? "selected='selected'" : ""}>070</option>
+							<option value="010" ${dto.mTel1=="010" ? "selected='selected'" : ""}>010</option>
+							<option value="02"  ${dto.mTel1=="02"  ? "selected='selected'" : ""}>02</option>
+							<option value="031" ${dto.mTel1=="031" ? "selected='selected'" : ""}>031</option>
+							<option value="032" ${dto.mTel1=="032" ? "selected='selected'" : ""}>032</option>
+							<option value="033" ${dto.mTel1=="033" ? "selected='selected'" : ""}>033</option>
+							<option value="041" ${dto.mTel1=="041" ? "selected='selected'" : ""}>041</option>
+							<option value="042" ${dto.mTel1=="042" ? "selected='selected'" : ""}>042</option>
+							<option value="043" ${dto.mTel1=="043" ? "selected='selected'" : ""}>043</option>
+							<option value="044" ${dto.mTel1=="044" ? "selected='selected'" : ""}>044</option>
+							<option value="051" ${dto.mTel1=="051" ? "selected='selected'" : ""}>051</option>
+							<option value="052" ${dto.mTel1=="052" ? "selected='selected'" : ""}>052</option>
+							<option value="053" ${dto.mTel1=="053" ? "selected='selected'" : ""}>053</option>
+							<option value="054" ${dto.mTel1=="054" ? "selected='selected'" : ""}>054</option>
+							<option value="055" ${dto.mTel1=="055" ? "selected='selected'" : ""}>055</option>
+							<option value="061" ${dto.mTel1=="061" ? "selected='selected'" : ""}>061</option>
+							<option value="062" ${dto.mTel1=="062" ? "selected='selected'" : ""}>062</option>
+							<option value="063" ${dto.mTel1=="063" ? "selected='selected'" : ""}>063</option>
+							<option value="064" ${dto.mTel1=="064" ? "selected='selected'" : ""}>064</option>
+							<option value="070" ${dto.mTel1=="070" ? "selected='selected'" : ""}>070</option>
 					  </select>
-					  <input type="text" name="tel2" maxlength="4" class="boxTF" value="${dto.tel2}" style="width: 33%;"> -
-					  <input type="text" name="tel3" maxlength="4" class="boxTF" value="${dto.tel3}" style="width: 33%;">
+					  <input type="text" name="mTel2" maxlength="4" class="boxTF" value="${dto.mTel2}" style="width: 33%;"> -
+					  <input type="text" name="mTel3" maxlength="4" class="boxTF" value="${dto.mTel3}" style="width: 33%;">
 				</td>
 			</tr>
 		
 			<tr>
 				<td>우편번호</td>
 				<td>
-					<input type="text" name="zip" id="zip" maxlength="7" class="boxTF" value="${dto.zip}" readonly="readonly" style="width: 50%;">
+					<input type="text" name="mZipcode" id="mZipcode" maxlength="7" class="boxTF" value="${dto.mZipcode}" readonly="readonly" style="width: 50%;">
 					<button type="button" class="btn in" onclick="daumPostcode();">우편번호검색</button>
 				</td>
 			</tr>
@@ -320,10 +358,10 @@ function changeEmail() {
 				<td valign="top">주&nbsp;&nbsp;&nbsp;&nbsp;소</td>
 				<td>
 					<p>
-						<input type="text" name="addr1" id="addr1" maxlength="50" class="boxTF" value="${dto.addr1}" readonly="readonly" style="width: 96%;">
+						<input type="text" name="mAddr1" id="mAddr1" maxlength="50" class="boxTF" value="${dto.mAddr1}" readonly="readonly" style="width: 96%;">
 					</p>
 					<p class="block">
-						<input type="text" name="addr2" id="addr2" maxlength="50" class="boxTF" value="${dto.addr2}" style="width: 96%;">
+						<input type="text" name="mAddr2" id="mAddr2" maxlength="50" class="boxTF" value="${dto.mAddr2}" style="width: 96%;">
 					</p>
 				</td>
 			</tr>
@@ -331,7 +369,7 @@ function changeEmail() {
 		</table>
 		
 		<table class="table">
-			<c:if test="${mode !='member'}">
+			<c:if test="${mode =='member'}">
 				<tr>
 					<td align="center">
 						<span>
@@ -345,10 +383,11 @@ function changeEmail() {
 					
 			<tr>
 				<td align="center">
-				    <button type="button" class="btn out" name="btnOk" onclick="memberOk();"> ${mode!="member"?"회원가입":"정보수정"} </button>
+				    <button type="button" class="btn out" name="btnOk" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} </button>
 				    <button type="reset" class="btn out"> 다시입력 </button>
 				    <button type="button" class="btn out" 
-				    	onclick="javascript:location.href='${pageContext.request.contextPath}/';"> ${mode!="member"?"가입취소":"수정취소"} </button>
+				    	onclick="javascript:location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} </button>
+					 <input type="hidden" name="mIdValid" id="mIdValid" value="false">
 				</td>
 			</tr>
 			
@@ -402,11 +441,11 @@ function changeEmail() {
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
-                document.getElementById('addr1').value = fullAddr;
+                document.getElementById('mZipcode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('mAddr1').value = fullAddr;
 
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById('addr2').focus();
+                document.getElementById('mAddr2').focus();
             }
         }).open();
     }

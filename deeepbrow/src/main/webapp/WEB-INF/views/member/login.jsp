@@ -84,17 +84,17 @@ function inputsFocus( id ) {
 function sendLogin() {
     var f = document.loginForm;
 
-	var str = f.userId.value;
+	var str = f.mId.value;
     if(!str) {
         alert("아이디를 입력하세요. ");
-        f.userId.focus();
+        f.mId.focus();
         return;
     }
 
-    str = f.userPwd.value;
+    str = f.mPassword.value;
     if(!str) {
         alert("패스워드를 입력하세요. ");
-        f.userPwd.focus();
+        f.mPassword.focus();
         return;
     }
 
@@ -121,20 +121,20 @@ function sendLogin() {
 				<table class="table">
 					<tr align="center"> 
 						<td> 
-							<label for="userId" id="lblUserId" class="lbl">아이디</label>
-							<input type="text" name="userId" id="userId" class="inputTF" maxlength="15"
+							<label for="mId" id="lblmId" class="lbl">아이디</label>
+							<input type="text" name="mId" id="mId" class="inputTF" maxlength="15"
 								tabindex="1"
-								onfocus="inputsFocus('lblUserId');"
-								onblur="bgLabel(this, 'lblUserId');">
+								onfocus="inputsFocus('lblmId');"
+								onblur="bgLabel(this, 'lblmId');">
 						</td>
 					</tr>
 					<tr align="center"> 
 					    <td>
-							<label for="userPwd" id="lblUserPwd" class="lbl">패스워드</label>
-							<input type="password" name="userPwd" id="userPwd" class="inputTF" maxlength="20" 
+							<label for="mPassword" id="lblmPassword" class="lbl">패스워드</label>
+							<input type="password" name="mPassword" id="mPassword" class="inputTF" maxlength="20" 
 								tabindex="2"
-								onfocus="inputsFocus('lblUserPwd');"
-								onblur="bgLabel(this, 'lblUserPwd');">
+								onfocus="inputsFocus('lblmPassword');"
+								onblur="bgLabel(this, 'lblmPassword');">
 					    </td>
 					</tr>
 					<tr align="center"> 
