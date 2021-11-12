@@ -72,8 +72,8 @@
 }
 </style>
 <script type="text/javascript">
-function searchList() {
-	var f = document.searchForm;
+function searchNotice() {
+	var f = document.searchNoticeForm;
 	f.submit();
 }
 </script>
@@ -124,7 +124,7 @@ function searchList() {
 	<table class="table">
 			<tr>
 				<td align="left">
-					<form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+					<form name="searchNoticeForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
 						<select name="condition" class="selectField">
 							<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 							<option value="reg_date"  ${condition=="reg_date"?"selected='selected'":"" }>등록일</option>
@@ -133,7 +133,7 @@ function searchList() {
 						</select>
 						<input type="text" name="keyword" value="${keyword}" class="boxTF">
 						<input type="hidden" name="rows" value="${rows}">
-						<button type="button" class="btn" onclick="searchList();">검색</button>
+						<button type="button" class="btn" onclick="searchNotice();">검색</button>
 					</form>
 				</td>
 				<td align="right" width="100">

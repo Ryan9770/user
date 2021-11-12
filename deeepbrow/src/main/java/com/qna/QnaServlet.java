@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import com.member.SessionInfo;
 import com.product.ProductDAO;
+import com.product.ProductDTO;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
@@ -50,16 +51,16 @@ public class QnaServlet extends MyUploadServlet {
 			updateSubmit(req, resp);
 		} else if(uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
-		} else if(uri.indexOf("insertQm") != -1) {
+		} else if(uri.indexOf("insertQm.do") != -1) {
 			// qna 답변 추가
 			insertQm(req, resp);
-		} else if(uri.indexOf("listQm") != -1) {
+		} else if(uri.indexOf("listQm.do") != -1) {
 			// qna 답변 리스트
 			listQm(req, resp);
-		} else if(uri.indexOf("deleteQm") != -1) {
+		} else if(uri.indexOf("deleteQm.do") != -1) {
 			// qna 답변 삭제
 			deleteQm(req, resp);
-		} else if(uri.indexOf("search") != -1) {
+		} else if(uri.indexOf("search.do") != -1) {
 			// 상품선택 모달
 			search(req, resp);
 		}
@@ -445,14 +446,28 @@ public class QnaServlet extends MyUploadServlet {
 	
 	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ProductDAO dao = new ProductDAO();
-		String state = "false";
 		
-		
-		JSONObject job = new JSONObject();
-		job.put("state", state);
+		try {
+			String keyword = req.getParameter("keyword");
+			List<ProductDTO> list = dao.searchProduct(1, 100, keyword);
+			
+			StringBuilder sb = new StringBuilder();
+			for(ProductDTO dto : list) {
+				sb.append("{\"pNo\":\""+dto.getpNo()+"\",\"pName\":\""+dto.getpName()+"\"},");
+			}
 
-		resp.setContentType("text/html;charset=utf-8");
-		PrintWriter out = resp.getWriter();
-		out.print(job.toString());
+			String s = "{}";
+			if(sb.length()>0)
+				s = "{\"list\":["+sb.substring(0, sb.length()-1)+"]}";
+	
+		
+			
+			resp.setContentType("text/html;charset=utf-8");
+			PrintWriter out = resp.getWriter();
+			out.print(s);
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

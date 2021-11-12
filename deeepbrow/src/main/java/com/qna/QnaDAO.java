@@ -137,7 +137,7 @@ public class QnaDAO {
 		try {
 			sb.append(" SELECT * FROM ( ");
 			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
-			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName, ");
+			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName, image_name, ");
 			sb.append("               NVL(replyCount, 0) replyCount ");
 			sb.append("         FROM qna q ");
 			sb.append("         JOIN member m ON q.mId = m.mId ");
@@ -146,9 +146,13 @@ public class QnaDAO {
 			sb.append("             GROUP BY qNo");
 			sb.append("         ) c ON q.qNo = c.qNo");
 			sb.append("         LEFT OUTER JOIN ( ");
-			sb.append("             select pNo, pname from product");
-			sb.append("             ) p on q.pNo = p.pNo");
-			sb.append("         ORDER BY qNo DESC ");
+			sb.append("             select pNo, pName from product");
+			sb.append("           ) p on q.pNo = p.pNo");
+			sb.append("         LEFT OUTER JOIN ( ");
+			sb.append("             select pNo, MIN(image_name) image_name");
+			sb.append("             from product_image pi");
+			sb.append("         	group by pno ");
+			sb.append("          ) pi on p.pno = pi.pno ");
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
 			sb.append(" ) WHERE rnum >= ? ");
 
@@ -169,6 +173,7 @@ public class QnaDAO {
 				dto.setqCategory(rs.getString("qCategory"));
 				dto.setpNo(rs.getInt("pNo"));
 				dto.setpName(rs.getString("pName"));
+				dto.setImageFilename(rs.getString("image_name"));
 				
 				dto.setReplyCount(rs.getInt("replyCount"));
 
@@ -204,7 +209,7 @@ public class QnaDAO {
 		try {
 			sb.append(" SELECT * FROM ( ");
 			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
-			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName,");
+			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName, image_name, ");
 			sb.append("               NVL(replyCount, 0) replyCount ");
 			sb.append("         FROM qna q ");
 			sb.append("         JOIN member m ON q.mId = m.mId ");
@@ -215,6 +220,11 @@ public class QnaDAO {
 			sb.append("         LEFT OUTER JOIN ( ");
 			sb.append("             select pNo, pname from product");
 			sb.append("             ) p on q.pNo = p.pNo");
+			sb.append("         LEFT OUTER JOIN ( ");
+			sb.append("             select pNo, MIN(image_name) image_name");
+			sb.append("             from product_image pi");
+			sb.append("         	group by pno ");
+			sb.append("          ) pi on p.pno = pi.pno ");
 			if (condition.equals("all")) {
 				sb.append("     WHERE INSTR(qSubject, ?) >= 1 OR INSTR(qContent, ?) >= 1 ");
 			} else if (condition.equals("qReg_date")) {
@@ -223,7 +233,6 @@ public class QnaDAO {
 			} else {
 				sb.append("     WHERE INSTR(" + condition + ", ?) >= 1 ");
 			}
-			sb.append("         ORDER BY qNo DESC ");
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
 			sb.append(" ) WHERE rnum >= ? ");
 			
@@ -251,7 +260,7 @@ public class QnaDAO {
 				dto.setqCategory(rs.getString("qCategory"));
 				dto.setpNo(rs.getInt("pNo"));
 				dto.setpName(rs.getString("pName"));
-
+				dto.setImageFilename(rs.getString("image_name"));
 				
 				dto.setReplyCount(rs.getInt("replyCount"));
 

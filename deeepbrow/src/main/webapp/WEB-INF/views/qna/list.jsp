@@ -43,19 +43,23 @@
 	width: 5%;
 }
 .product {
-	width: 10%;
+	width: 20%;
 }
 .question_ct{
 	width: 10%;
 }
 .subject{
-	width: 55%;
+	width: 50%;
 }
 .name{
-	width: 10%;
+	width: 5%;
 }
 .date{
 	width: 10%;
+}
+.table-list td:nth-child(2) {
+	text-align: left;
+	padding-left: 20px;
 }
 .table-list td:nth-child(4) {
 	text-align: left;
@@ -87,8 +91,8 @@
 }
 </style>
 <script type="text/javascript">
-function searchList() {
-	var f = document.searchForm;
+function searchQna() {
+	var f = document.searchQnaForm;
 	f.submit();
 }
 </script>
@@ -125,7 +129,7 @@ function searchList() {
 			<tr>
 				<td>${dto.listNum}</td>
 				<td>
-					<img src="${pageContext.request.contextPath}/resource/images/product.jpg" width="30px" style="vertical-align: middle;"> ${dto.pName}
+					<img src="${pageContext.request.contextPath}/uploads/product/${dto.imageFilename}" width="30px" style="vertical-align: middle;"> ${dto.pName}
 				</td>
 				<td>
 					<c:choose>
@@ -156,7 +160,7 @@ function searchList() {
 	<table class="table">
 			<tr>
 				<td align="left">
-					<form name="searchForm" action="${pageContext.request.contextPath}/qna/list.do" method="post">
+					<form name="searchQnaForm" action="${pageContext.request.contextPath}/qna/list.do" method="post">
 						<select name="condition" class="selectField">
 							<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 							<option value="reg_date"  ${condition=="reg_date"?"selected='selected'":"" }>등록일</option>
@@ -165,7 +169,7 @@ function searchList() {
 						</select>
 						<input type="text" name="keyword" value="${keyword}" class="boxTF">
 						<input type="hidden" name="rows" value="${rows}">
-						<button type="button" class="btn" onclick="searchList();">검색</button>
+						<button type="button" class="btn" onclick="searchQna();">검색</button>
 					</form>
 				</td>
 				<td align="right" width="100">

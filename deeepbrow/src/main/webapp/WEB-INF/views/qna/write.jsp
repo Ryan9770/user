@@ -56,6 +56,24 @@
 .table td:nth-child(2) {
 	text-align: left;
 }
+.modalSearch{
+	border: none;
+    background: #eee;
+    width: 80px;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+.modalSearch:hover {
+	background-color: #dfdddd;
+	border-color: #adadad;
+	color:#333;
+}
+.searchList{
+	padding-top: 10px;
+	line-height: 40px;
+}
 </style>
 
 
@@ -104,8 +122,9 @@ function ajaxFun(url, method, query, dataType, fn) {
 $(function(){
 	$(".productPick").click(function() {
 		$(".popup-dialog").dialog({
+			title:"상품검색",
 			modal:true,
-			width: 500,
+			width: 600,
 			height: 500
 		});
 	});
@@ -113,13 +132,13 @@ $(function(){
 
 $(function(){
 	$(".modalSearch").click(function(){
+		$(".searchList").empty();
 		var keyword = $("#keyword").val().trim();
 		if(! keyword) {
 			$("#keyword").focus();
 			return false;
 		}
 		keyword = encodeURIComponent(keyword);
-		
 		var url = "${pageContext.request.contextPath}/qna/search.do";
 		var query = "keyword=" + keyword;
 		
@@ -127,20 +146,28 @@ $(function(){
 			$("#keyword").val("");
 			
 			var out = "";
-			for(var idx=0; idx<data.list.length;idx++){
+			for(var idx=0; idx<data.list.length; idx++){
 				var pNo = data.list[idx].pNo;
 				var pName = data.list[idx].pName;
 				
-				out += "<span> 상품 번호 : "+pNo+"</span>&nbsp;&nbsp;";
-				out += "<span> 상품 이름 : "+pName+"</span><br>";
-				out += "<button type='button' class='btn'>선택</button>";
-	
+				out += "<tr><td><span> 상품 번호 : "+pNo+"</span>&nbsp;&nbsp;";
+				out += "<span> 상품 이름 : "+pName+"</span></td>";
+				out += "<td><button type='button' class='modalSearch pickdone' value="+pNo+">선택</button></td></tr>";
 			}
 			$(".searchList").append(out);
 		};
 		
 		ajaxFun(url, "post", query, "json", fn);
 	});
+	
+	
+	$(document).on("click",".pickdone",function(){
+		console.log(this.value);
+		//$('[name="pNo"]').val(this.value);
+		$("#modal-data").val(this.value);
+		$(".popup-dialog").dialog("close");
+	});
+	
 });
 </script>
 <script type="text/javascript">
@@ -161,7 +188,13 @@ function sendOk() {
         f.qContent.focus();
         return;
     }
-
+    
+	str = f.pNo.value.trim();
+    if(!str) {
+        alert("상품을 선택하세요. ");
+        return;
+    }
+    
     str = f.qCategory.value.trim();
     if(!str) {
         alert("문의내용을 선택하세요. ");
@@ -169,13 +202,7 @@ function sendOk() {
         return;
     }
 
-    str = f.pNo.value.trim();
-    if(!str) {
-        alert("상품을 선택하세요. ");
-        return;
-    }
-
-    f.action = "${pageContext.request.contextPath}/notice/${mode}_ok.do";
+    f.action = "${pageContext.request.contextPath}/qna/${mode}_ok.do";
     f.submit();
 }
 </script>
@@ -217,6 +244,7 @@ function sendOk() {
 				<td>상품 번호</td>
 				<td> 
 					<button type="button" class="btn productPick">상품 선택</button>
+					<input type="text" class="boxTF" id="modal-data" name="pNo" value="" readonly="readonly" style="width: 5%;">
 				</td>
 			</tr>
 				
@@ -246,13 +274,17 @@ function sendOk() {
 </div>
 
 <div class="popup-dialog" style="display: none;">
-	<h3>상품 검색</h3>
-	<div>
-		<input type="text" id="keyword" class="boxTF">
-		<button type="button" class="btn modalSearch">검색</button>
+	<div style="padding: 10px 0 20px 0;" align="center">
+		<input type="text" id="keyword" class="boxTF" style="width: 60%;" placeholder="상품을 검색하세요">
+		<button type="button" class="modalSearch" >검색</button>
 	</div>
-	<div class="searchList">
+	<hr>
+	<div align="center">
+		<table class="searchList">
+		</table>
 	</div>
+	
+	
 </div>
 
 </main>
