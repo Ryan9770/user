@@ -40,15 +40,47 @@
 	border: 1px solid white;
 	margin-bottom: 50px;
 }
+.article-td td {
+	border-bottom: 1px solid white;
+}
 .left{
 	text-align: left;
 }
 .text{
 	padding-left: 30px;
 }
+.qm-form td:first-child {
+	width: 90%;
+}
 </style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-<c:if test="${sessionScope.member.userId=='admin'}">
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 405) {
+				alert("접근을 허용하지 않습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
 function deleteQna() {
     if(confirm("게시글을 삭제 하시 겠습니까 ? ")) {
         var query = "qNo=${dto.qNo}&${query}";
@@ -56,7 +88,71 @@ function deleteQna() {
     	location.href = url;
     }
 }
-</c:if>
+
+
+
+$(function(){
+	listPage(1);
+});
+
+function listPage(page) {
+	var url = "${pageContext.request.contextPath}/qna/listQm.do";
+	var query = "qNo=${dto.qNo}&pageNo="+page;
+	var selector = "#listQm";
+	
+	var fn = function(data){
+		$(selector).html(data);
+	};
+	ajaxFun(url, "get", query, "html", fn);
+}
+$(function(){
+	$(".btnSendQm").click(function(){
+		var qNo = "${dto.qNo}";
+		var $tb = $(this).closest("table");
+		var qmContent = $tb.find("textarea").val().trim();
+		if(! qmContent) {
+			$tb.find("textarea").focus();
+			return false;
+		}
+		qmContent = encodeURIComponent(qmContent);
+		
+		var url = "${pageContext.request.contextPath}/qna/insertQm.do";
+		var query = "qNo=" + qNo + "&qmContent=" + qmContent;
+		
+		var fn = function(data){
+			$tb.find("textarea").val("");
+			
+			var state = data.state;
+			if(state === "true") {
+				listPage(1);
+			} else if(state === "false") {
+				alert("답변을 달지 못했습니다.");
+			}
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
+$(function(){
+	$("body").on("click", ".deleteQm", function(){
+		if(! confirm("답변을 삭제하시겠습니까 ? ")) {
+		    return false;
+		}
+		
+		var qmNo = $(this).attr("data-qmNo");
+		var page = $(this).attr("data-pageNo");
+		
+		var url = "${pageContext.request.contextPath}/qna/deleteQm.do";
+		var query = "qmNo="+qmNo;
+		
+		var fn = function(data){
+			listPage(page);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
 </script>
 </head>
 <body>
@@ -70,10 +166,27 @@ function deleteQna() {
 	<div class="title-body">
 		<span class="article-title">QnA</span>
 	</div>
-	<table class="table table-article">
+	<table class="table table-article article-td">
 		<tr>
 			<td class="left">
 				<span class="text" style="font-size: 18px;">${dto.qSubject}</span> | ${dto.mId} | ${dto.qReg_date}
+			</td>
+		</tr>
+		<tr>
+			<td class="left">
+				<span class="text" >문의 내용 |
+					<c:choose>
+						<c:when test="${dto.qCategory=='product'}">상품문의</c:when>
+						<c:when test="${dto.qCategory=='delivery'}">배송문의</c:when>
+						<c:when test="${dto.qCategory=='change'}">교환/반품/취소</c:when>
+						<c:when test="${dto.qCategory=='etc'}">기타문의</c:when>
+					</c:choose>
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="left">
+				<span class="text" >상품 정보 | ${dto.pName}</span>
 			</td>
 		</tr>
 		<tr>
@@ -112,11 +225,13 @@ function deleteQna() {
 				</td>
 				<td width="50%" align="right">
 					<c:choose>
-						<c:when test="${sessionScope.member.userId=='admin'}">
+						<c:when test="${sessionScope.member.userId==dto.mId}">
 							<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/update.do?qNo=${dto.qNo}&page=${page}&rows=${rows}';">수정</button>
+							<button type="button" class="btn" onclick="deleteQna();">삭제</button>
 						</c:when>
 						<c:otherwise>
 							<button type="button" class="btn" disabled="disabled" style="display: none;">수정</button>
+							<button type="button" class="btn" disabled="disabled" style="display: none;">삭제</button>
 						</c:otherwise>
 					</c:choose>
 			    	
@@ -135,24 +250,26 @@ function deleteQna() {
 		<c:if test="${sessionScope.member.userId=='admin'}">
 			<div class="qnamanage">
 				<form name="qmForm" method="post">
-					<div class="form-header">
-						<span>답변 남기기</span>
+					<div class="title-body">
+						<span class="article-title">ANSWER</span>
 					</div>
 					<table class="table qm-form">
 						<tr>
 							<td>
-								<textarea class='boxTA' name="content"></textarea>
+								<textarea name="content" style="width: 100%; height: 100px;"></textarea>
 							</td>
-						</tr>
-						<tr>
 						   <td align='right'>
-						        <button type='button' class='btn btnSendReply'>답변 등록</button>
+						        <button type='button' class='btn btnSendQm'>답변 등록</button>
 						    </td>
-						 </tr>
+						</tr>
 					</table>	
 				</form>
 			</div>
 		</c:if>
+				
+		<div id="listQm" style="padding-top: 50px;">
+		</div>
+				
 </div>
 </main>
 

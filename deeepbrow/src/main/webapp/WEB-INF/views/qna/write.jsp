@@ -58,23 +58,11 @@
 }
 </style>
 
-<style type="text/css">
-/* 모달대화상자 */
-.ui-widget-header { /* 타이틀바 */
-	background: none;
-	border: none;
-	border-bottom: 1px solid #ccc;
-	border-radius: 0;
-}
-.ui-dialog .ui-dialog-title {
-	padding-top: 5px; padding-bottom: 5px;
-}
-.ui-widget-content { /* 내용 */
-   /* border: none; */
-   border-color: #ccc; 
-}
-</style>
 
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/jquery/css/jquery-ui.min.css" type="text/css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery-ui.min.js"></script>
 
 </head>
 <body>
@@ -82,36 +70,108 @@
 <header>
     <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 </header>
+
+
 <main>
 
 <script type="text/javascript">
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 405) {
+				alert("접근을 허용하지 않습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
 $(function(){
 	$(".productPick").click(function() {
-		$(".modal-dialog").dialog({
+		$(".popup-dialog").dialog({
 			modal:true,
-			width:600,
-			height:500
+			width: 500,
+			height: 500
 		});
 	});
 });
 
+$(function(){
+	$(".modalSearch").click(function(){
+		var keyword = $("#keyword").val().trim();
+		if(! keyword) {
+			$("#keyword").focus();
+			return false;
+		}
+		keyword = encodeURIComponent(keyword);
+		
+		var url = "${pageContext.request.contextPath}/qna/search.do";
+		var query = "keyword=" + keyword;
+		
+		var fn = function(data){
+			$("#keyword").val("");
+			
+			var out = "";
+			for(var idx=0; idx<data.list.length;idx++){
+				var pNo = data.list[idx].pNo;
+				var pName = data.list[idx].pName;
+				
+				out += "<span> 상품 번호 : "+pNo+"</span>&nbsp;&nbsp;";
+				out += "<span> 상품 이름 : "+pName+"</span><br>";
+				out += "<button type='button' class='btn'>선택</button>";
+	
+			}
+			$(".searchList").append(out);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
 </script>
 <script type="text/javascript">
 function sendOk() {
     var f = document.noticeForm;
 	var str;
 	
-    str = f.nSubject.value.trim();
+    str = f.qSubject.value.trim();
     if(!str) {
         alert("제목을 입력하세요. ");
-        f.nSubject.focus();
+        f.qSubject.focus();
         return;
     }
 
-    str = f.nContent.value.trim();
+    str = f.qContent.value.trim();
     if(!str) {
         alert("내용을 입력하세요. ");
-        f.nContent.focus();
+        f.qContent.focus();
+        return;
+    }
+
+    str = f.qCategory.value.trim();
+    if(!str) {
+        alert("문의내용을 선택하세요. ");
+        f.qCategory.focus();
+        return;
+    }
+
+    str = f.pNo.value.trim();
+    if(!str) {
+        alert("상품을 선택하세요. ");
         return;
     }
 
@@ -129,7 +189,7 @@ function sendOk() {
 			<tr>
 				<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 				<td> 
-					<input type="text" name="nSubject" maxlength="100" class="boxTF" value="${dto.qSubject}">
+					<input type="text" name="qSubject" maxlength="100" class="boxTF" value="${dto.qSubject}">
 				</td>
 			</tr>
 
@@ -143,12 +203,12 @@ function sendOk() {
 			<tr> 
 				<td>문의 카테고리</td>
 				<td> 
-					<select name="question" class="selectField" >
+					<select name="qCategory" class="selectField" >
 						<option value="" selected="selected" hidden="hidden">질문유형을 선택해 주세요</option>
-						<option value="product"      ${question=="product"?"selected='selected'":"" }>상품 문의</option>
-						<option value="delivery"  ${question=="delivery"?"selected='selected'":"" }>배송 문의</option>
-						<option value="change"  ${question=="change"?"selected='selected'":"" }>교환/반품/취소</option>
-						<option value="etc"  ${question=="etc"?"selected='selected'":"" }>기타</option>
+						<option value="product"      ${qCategory=="product"?"selected='selected'":"" }>상품문의</option>
+						<option value="delivery"  ${qCategory=="delivery"?"selected='selected'":"" }>배송문의</option>
+						<option value="change"  ${qCategory=="change"?"selected='selected'":"" }>교환/반품/취소</option>
+						<option value="etc"  ${qCategory=="etc"?"selected='selected'":"" }>기타문의</option>
 					</select>
 				</td>
 			</tr>
@@ -156,14 +216,14 @@ function sendOk() {
 			<tr> 
 				<td>상품 번호</td>
 				<td> 
-					<button class="btn productPick">상품 선택</button>
+					<button type="button" class="btn productPick">상품 선택</button>
 				</td>
 			</tr>
 				
 			<tr> 
 				<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 				<td> 
-					<textarea name="nContent" class="boxTA" style="height: 200px;">${dto.qContent}</textarea>
+					<textarea name="qContent" class="boxTA" style="height: 200px;">${dto.qContent}</textarea>
 				</td>
 			</tr>
 		</table>
@@ -176,7 +236,7 @@ function sendOk() {
 					<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/list.do?rows=${rows}';">${mode=='update'?'수정취소':'등록취소'}</button>
 					<input type="hidden" name="rows" value="${rows}">
 					<c:if test="${mode=='update'}">
-						<input type="hidden" name="nNo" value="${dto.nNo}">
+						<input type="hidden" name="qNo" value="${dto.qNo}">
 						<input type="hidden" name="page" value="${page}">
 					</c:if>
 				</td>
@@ -185,8 +245,14 @@ function sendOk() {
 	</form>
 </div>
 
-<div class="modal-dialog" style="display: none;">
-	<p>내용</p>
+<div class="popup-dialog" style="display: none;">
+	<h3>상품 검색</h3>
+	<div>
+		<input type="text" id="keyword" class="boxTF">
+		<button type="button" class="btn modalSearch">검색</button>
+	</div>
+	<div class="searchList">
+	</div>
 </div>
 
 </main>

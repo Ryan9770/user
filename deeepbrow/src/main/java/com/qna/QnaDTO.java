@@ -9,6 +9,7 @@ public class QnaDTO {
 	private String mId;
 	private int pNo;
 	
+	private String pName;
 	private int replyCount;
 	private String imageFilename;
 	
@@ -71,6 +72,12 @@ public class QnaDTO {
 	}
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
+	}
+	public String getpName() {
+		return pName;
+	}
+	public void setpName(String pName) {
+		this.pName = pName;
 	}
 	
 	

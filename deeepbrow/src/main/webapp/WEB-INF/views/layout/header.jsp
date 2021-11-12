@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
-
+<script src="https://kit.fontawesome.com/42044ce0be.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/jquery/css/jquery-ui.min.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery-ui.min.js"></script>
@@ -87,7 +87,6 @@ function searchItem() {
 				<li><a href="${pageContext.request.contextPath}/product/manage.do">재고관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/asale/list.do">판매현황</a></li>
 				<li><a href="${pageContext.request.contextPath}/delivery/list.do">주문관리</a></li>
-				<li><a>게시판관리</a></li>
 			</ul>
 		</c:if>
 		

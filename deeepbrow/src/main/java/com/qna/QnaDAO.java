@@ -137,14 +137,17 @@ public class QnaDAO {
 		try {
 			sb.append(" SELECT * FROM ( ");
 			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
-			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory,");
+			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName, ");
 			sb.append("               NVL(replyCount, 0) replyCount ");
 			sb.append("         FROM qna q ");
 			sb.append("         JOIN member m ON q.mId = m.mId ");
 			sb.append("         LEFT OUTER JOIN ( ");
-			sb.append("             SELECT qmNo, COUNT(*) replyCount FROM qna_Manage");
-			sb.append("             GROUP BY qmNo");
-			sb.append("         ) c ON q.qNo = c.qmNo");
+			sb.append("             SELECT qNo, COUNT(*) replyCount FROM qna_Manage");
+			sb.append("             GROUP BY qNo");
+			sb.append("         ) c ON q.qNo = c.qNo");
+			sb.append("         LEFT OUTER JOIN ( ");
+			sb.append("             select pNo, pname from product");
+			sb.append("             ) p on q.pNo = p.pNo");
 			sb.append("         ORDER BY qNo DESC ");
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
 			sb.append(" ) WHERE rnum >= ? ");
@@ -164,6 +167,8 @@ public class QnaDAO {
 				dto.setqSubject(rs.getString("qSubject"));
 				dto.setqReg_date(rs.getString("qReg_date"));
 				dto.setqCategory(rs.getString("qCategory"));
+				dto.setpNo(rs.getInt("pNo"));
+				dto.setpName(rs.getString("pName"));
 				
 				dto.setReplyCount(rs.getInt("replyCount"));
 
@@ -199,14 +204,17 @@ public class QnaDAO {
 		try {
 			sb.append(" SELECT * FROM ( ");
 			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
-			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory,");
+			sb.append("         SELECT q.qNo, q.mId, q.qSubject, q.qReg_date, q.qCategory, q.pNo, pName,");
 			sb.append("               NVL(replyCount, 0) replyCount ");
 			sb.append("         FROM qna q ");
-			sb.append("         JOIN member m ON n.mId = m.mId ");
+			sb.append("         JOIN member m ON q.mId = m.mId ");
 			sb.append("         LEFT OUTER JOIN ( ");
 			sb.append("             SELECT qmNo, COUNT(*) replyCount FROM qna_Manage");
 			sb.append("             GROUP BY qmNo");
 			sb.append("         ) c ON q.qNo = c.qmNo");
+			sb.append("         LEFT OUTER JOIN ( ");
+			sb.append("             select pNo, pname from product");
+			sb.append("             ) p on q.pNo = p.pNo");
 			if (condition.equals("all")) {
 				sb.append("     WHERE INSTR(qSubject, ?) >= 1 OR INSTR(qContent, ?) >= 1 ");
 			} else if (condition.equals("qReg_date")) {
@@ -231,7 +239,6 @@ public class QnaDAO {
 				pstmt.setInt(2, end);
 				pstmt.setInt(3, start);
 			}
-
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -242,6 +249,9 @@ public class QnaDAO {
 				dto.setqSubject(rs.getString("qSubject"));
 				dto.setqReg_date(rs.getString("qReg_date"));
 				dto.setqCategory(rs.getString("qCategory"));
+				dto.setpNo(rs.getInt("pNo"));
+				dto.setpName(rs.getString("pName"));
+
 				
 				dto.setReplyCount(rs.getInt("replyCount"));
 
@@ -274,9 +284,12 @@ public class QnaDAO {
 		String sql;
 
 		try {
-			sql = "SELECT q.qNo, q.mId, q.qSubject, q.qContent, q.qReg_date, q.qCategory "
+			sql = "SELECT q.qNo, q.mId, q.qSubject, q.qContent, q.qReg_date, q.qCategory, q.pNo, pName "
 					+ " FROM qna q "
 					+ " JOIN member m ON q.mId=m.mId "
+					+ " LEFT OUTER JOIN ("
+					+ " SELECT pNo, pName from product "
+					+ ") p ON q.pNo = p.pNo "
 					+ " WHERE qNo = ?";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -293,6 +306,8 @@ public class QnaDAO {
 				dto.setqContent(rs.getString("qContent"));
 				dto.setqReg_date(rs.getString("qReg_date"));
 				dto.setqCategory(rs.getString("qCategory"));
+				dto.setpNo(rs.getInt("pNo"));
+				dto.setpName(rs.getString("pName"));
 			}
 
 		} catch (SQLException e) {
@@ -351,9 +366,9 @@ public class QnaDAO {
 				}
 			} else {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("     SELECT num, subject FROM bbs ");
-				sb.append("     WHERE num > ? ");
-				sb.append("     ORDER BY num ASC ");
+				sb.append("     SELECT qNo, qSubject FROM qna ");
+				sb.append("     WHERE qNo > ? ");
+				sb.append("     ORDER BY qNo ASC ");
 				sb.append(" ) WHERE ROWNUM = 1 ");
 
 				pstmt = conn.prepareStatement(sb.toString());
@@ -424,9 +439,9 @@ public class QnaDAO {
 				}
 			} else {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("     SELECT num, subject FROM bbs ");
-				sb.append("     WHERE num > ? ");
-				sb.append("     ORDER BY num ASC ");
+				sb.append("     SELECT qNo, qSubject FROM qna ");
+				sb.append("     WHERE qNo > ? ");
+				sb.append("     ORDER BY qNo ASC ");
 				sb.append(" ) WHERE ROWNUM = 1 ");
 
 				pstmt = conn.prepareStatement(sb.toString());
@@ -464,20 +479,21 @@ public class QnaDAO {
 	}
 	
 	// 수정
-	public int update(QnaDTO dto) throws SQLException {
+	public int updateQna(QnaDTO dto) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "UPDATE bbs SET qSubject=?, qContent=?, qCategory=? WHERE qNo=? AND mId=?";
+			sql = "UPDATE bbs SET qSubject=?, qContent=?, qCategory=?, pNo=? WHERE qNo=? AND mId=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getqSubject());
 			pstmt.setString(2, dto.getqContent());
 			pstmt.setString(3, dto.getqCategory());
-			pstmt.setInt(4, dto.getqNo());
-			pstmt.setString(5, dto.getmId());
+			pstmt.setInt(4, dto.getpNo());
+			pstmt.setInt(5, dto.getqNo());
+			pstmt.setString(6, dto.getmId());
 			
 			result = pstmt.executeUpdate();
 
@@ -498,28 +514,35 @@ public class QnaDAO {
 	
 	// 삭제 (답글도 한번에 삭제되게 수정해야함)
 	public int deleteQna(int num, String mId) throws SQLException {
-		int result = 0;
+		int result,result2 = 0;
 		
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		
 		String sql;
 
 		try {
 			if (mId.equals("admin")) {
-				sql = "DELETE FROM bbs WHERE num=?";
+				sql= "DELETE FROM qna_manage WHERE qNo=?";
 				pstmt = conn.prepareStatement(sql);
-				
 				pstmt.setInt(1, num);
-				
 				result = pstmt.executeUpdate();
+				
+				sql = "DELETE FROM qna WHERE qNo=?";
+				pstmt2 = conn.prepareStatement(sql);
+				pstmt2.setInt(1, num);
+				result2 = pstmt.executeUpdate();
 			} else {
-				sql = "DELETE FROM qna WHERE num=? AND mId=?";
-				
+				sql= "DELETE FROM qna_manage WHERE qNo=?";
 				pstmt = conn.prepareStatement(sql);
-				
 				pstmt.setInt(1, num);
-				pstmt.setString(2, mId);
-				
 				result = pstmt.executeUpdate();
+				
+				sql = "DELETE FROM qna WHERE qNo=? AND mId=?";
+				pstmt2 = conn.prepareStatement(sql);
+				pstmt2.setInt(1, num);
+				pstmt2.setString(2, mId);
+				result2 = pstmt2.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -531,8 +554,14 @@ public class QnaDAO {
 				} catch (SQLException e) {
 				}
 			}
+			if (pstmt2 != null) {
+				try {
+					pstmt2.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
-		return result;
+		return result&result2;
 	}
 	// 게시물 답글 추가
 	public int insertQm(QnamanageDTO dto) throws SQLException{
@@ -614,7 +643,7 @@ public class QnaDAO {
 			sb.append("         SELECT r.qmNo, r.mId, qNo, qmContent, r.qmReg_date ");
 			sb.append("         FROM qna_manage r ");
 			sb.append("         JOIN member m ON r.mId = m.mId ");
-			sb.append("	        WHERE num = ?");
+			sb.append("	        WHERE qNo = ?");
 			sb.append("         ORDER BY r.qmNo DESC ");
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
 			sb.append(" ) WHERE rnum >= ? ");
@@ -630,6 +659,7 @@ public class QnaDAO {
 				QnamanageDTO dto = new QnamanageDTO();
 				
 				dto.setmId(rs.getString("mId"));
+				dto.setQmNo(rs.getInt("qmNo"));
 				dto.setQmContent(rs.getString("qmContent"));
 				dto.setQmReg_date(rs.getString("qmReg_date"));
 				
@@ -713,14 +743,12 @@ public class QnaDAO {
 				return result;
 			}
 		}
-		
 		try {
 			sql = "DELETE FROM qna_Manage WHERE qmNo=?";
 			pstmt = conn.prepareStatement(sql);
-			
 			pstmt.setInt(1, qmNo);
-			
 			result = pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -731,7 +759,7 @@ public class QnaDAO {
 				} catch (SQLException e) {
 				}
 			}
-		}		
+		}
 		return result;
 	}
 }

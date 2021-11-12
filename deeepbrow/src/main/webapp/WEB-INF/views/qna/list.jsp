@@ -43,7 +43,10 @@
 	width: 5%;
 }
 .product {
-	width: 20%;
+	width: 10%;
+}
+.question_ct{
+	width: 10%;
 }
 .subject{
 	width: 55%;
@@ -54,7 +57,7 @@
 .date{
 	width: 10%;
 }
-.table-list td:nth-child(3) {
+.table-list td:nth-child(4) {
 	text-align: left;
 	padding-left: 20px;
 }
@@ -84,7 +87,10 @@
 }
 </style>
 <script type="text/javascript">
-
+function searchList() {
+	var f = document.searchForm;
+	f.submit();
+}
 </script>
 </head>
 <body>
@@ -110,7 +116,8 @@
 			<tr>
 				<th class="no">No</th>
 				<th class="product">PRODUCT</th>
-				<th class="subject">SUBJECT</th>
+				<th class="question_ct">CATEGORY</th>
+				<th class="subject" colspan="2">SUBJECT</th>
 				<th class="name">NAME</th>
 				<th class="date">DATE</th>
 			</tr>
@@ -118,11 +125,22 @@
 			<tr>
 				<td>${dto.listNum}</td>
 				<td>
-					<img src="${pageContext.request.contextPath}/resource/images/product.jpg" width="30px" style="vertical-align: middle;">제품ddddddddcsdfsdfd
-					<c:if test="${dto.replyCount!=0}"> (답변완료) </c:if>
+					<img src="${pageContext.request.contextPath}/resource/images/product.jpg" width="30px" style="vertical-align: middle;"> ${dto.pName}
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="${dto.qCategory=='product'}">상품문의</c:when>
+						<c:when test="${dto.qCategory=='delivery'}">배송문의</c:when>
+						<c:when test="${dto.qCategory=='change'}">교환/반품/취소</c:when>
+						<c:when test="${dto.qCategory=='etc'}">기타문의</c:when>
+					</c:choose>
 				</td>
 				<td>
 					<a href="${articleUrl}&qNo=${dto.qNo}">${dto.qSubject}</a>
+				</td>
+				<td width="5%">
+					<c:if test="${dto.replyCount!=0}"> <i class="far fa-check-circle"></i> </c:if>
+					<c:if test="${dto.replyCount==0}"> <i class="far fa-circle"></i> </c:if>
 				</td>
 				<td>${dto.mId}</td>
 				<td>${dto.qReg_date}</td>
@@ -138,7 +156,7 @@
 	<table class="table">
 			<tr>
 				<td align="left">
-					<form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+					<form name="searchForm" action="${pageContext.request.contextPath}/qna/list.do" method="post">
 						<select name="condition" class="selectField">
 							<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 							<option value="reg_date"  ${condition=="reg_date"?"selected='selected'":"" }>등록일</option>
