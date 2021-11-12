@@ -31,6 +31,11 @@ $(function() {
 		}
 	});
 });
+
+function searchItem() {
+	var f = document.searchForm;
+	f.submit();	
+}
 </script>
 
 <div class="header-left">
@@ -89,7 +94,10 @@ $(function() {
 	</div>
 </div>
 
-<div class="search">
-	<a href=""><img src="${pageContext.request.contextPath}/resource/images/search.png" style="width: 20px;"></a><input type="text" class="search-input">
-</div>
+<form name="searchForm" action="${pageContext.request.contextPath}/product/list.do" method="post">
+	<div class="search">
+		<a href="javascript:searchItem();"><img src="${pageContext.request.contextPath}/resource/images/search.png" style="width: 20px;"></a>
+		<input type="text" name="keyword" value="${keyword}" class="search-input">
+	</div>
+</form>
 

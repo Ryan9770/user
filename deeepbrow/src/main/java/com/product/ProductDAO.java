@@ -118,7 +118,7 @@ public class ProductDAO {
 		return result;
 	}
 	
-	// 검색에서의 데이터 카운트
+	// 카테고리 데이터 카운트
 		public int dataCount(String pCategory_code) {
 			int result = 0;
 			PreparedStatement pstmt = null;
@@ -227,7 +227,7 @@ public class ProductDAO {
 		}		
 	
 		// 리스트 검색
-	public List<ProductDTO> listProduct(int start, int end, String pCategory_code){
+		public List<ProductDTO> listProduct(int start, int end, String pCategory_code){
 		List<ProductDTO> list = new ArrayList<ProductDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -338,6 +338,117 @@ public class ProductDAO {
 					
 			return list;
 		}
+		
+		public int searchCount(String keyword) {
+			int result = 0;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String sql;
+
+			try {
+				sql = "SELECT NVL(COUNT(*), 0) FROM Product WHERE INSTR(pName,  ?) >= 1 OR INSTR(pDesc, ?) >= 1";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+				
+				rs = pstmt.executeQuery();
+				if (rs.next())
+					result = rs.getInt(1);
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e) {
+					}
+				}
+
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+
+			return result;
+		}
+		
+		// 리스트 검색
+		public List<ProductDTO> searchProduct(int start, int end, String keyword){
+			List<ProductDTO> list = new ArrayList<ProductDTO>();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			StringBuilder sb = new StringBuilder();
+			
+			try {
+				sb.append(" SELECT * FROM ( ");
+				sb.append(" 	SELECT ROWNUM rnum, tb.* FROM ( ");
+				sb.append("			SELECT p.pNo, pName, pPrice, pDesc, pStock, ");
+				sb.append(" 			   TO_CHAR(pDate, 'YYYY-MM-DD') pDate, ");
+				sb.append("				    p.pCategory_code, pCategory_name, image_name ");
+				sb.append("				FROM Product p");
+				sb.append("				JOIN Product_category pc ON p.pCategory_code = pc.pCategory_code ");
+				sb.append("				LEFT OUTER JOIN (");
+				sb.append("					SELECT imageNo, pNo, image_name FROM ( ");
+				sb.append("						SELECT imageNo, pNo, image_name, ");
+				sb.append("							ROW_NUMBER() OVER(PARTITION BY pNo ORDER BY imageNo ASC) rank ");
+				sb.append("						FROM Product_image");
+				sb.append("					) WHERE rank = 1 ");
+				sb.append("				) pi ON p.pNo = pi.pNo ");
+				sb.append("             WHERE INSTR(pName, ?) >= 1 OR INSTR(pDesc, ?) >= 1 ");
+				sb.append("				ORDER BY pNo DESC ");
+				sb.append("			) tb WHERE ROWNUM <= ? ");
+				sb.append(" ) WHERE rnum >= ? ");
+			
+				pstmt = conn.prepareStatement(sb.toString());
+
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+				pstmt.setInt(3, end);
+				pstmt.setInt(4, start);
+
+				rs = pstmt.executeQuery();
+				while(rs.next()) {
+					ProductDTO dto = new ProductDTO();
+				
+					dto.setpNo(rs.getInt("pNo"));
+					dto.setpName(rs.getString("pName"));
+					dto.setpPrice(rs.getInt("pPrice"));
+					dto.setpDesc(rs.getString("pDesc"));
+					dto.setpStock(rs.getInt("pStock"));
+					dto.setpDate(rs.getString("pDate"));
+					dto.setpCategory_code(rs.getString("pCategory_code"));
+					dto.setpCategory_name(rs.getString("pCategory_name"));
+					dto.setImage_name(rs.getString("image_name"));
+					
+					list.add(dto);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e2) {
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e2) {
+					}
+				
+				}
+			}
+				return list;
+
+			}
 	
 
 		// 아티클

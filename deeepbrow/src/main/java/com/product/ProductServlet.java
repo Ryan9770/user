@@ -4,6 +4,8 @@ package com.product;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -76,8 +78,8 @@ public class ProductServlet extends MyUploadServlet {
 		ProductDAO dao = new ProductDAO();
 		MyUtil util = new MyUtil();
 	
-				
 		String cp = req.getContextPath();
+		
 		try {
 			String page = req.getParameter("page");
 			int current_page = 1;
@@ -89,15 +91,29 @@ public class ProductServlet extends MyUploadServlet {
 			if(pCategory_code==null) {
 				pCategory_code="";
 			}
-
-			//데이터 개수
-			int dataCount;
-			if(pCategory_code.length() == 0) {
-				dataCount = dao.dataCount();
+			
+			// 검색
+			String keyword = req.getParameter("keyword");
+			if(keyword == null) {
+				keyword="";
 			} else {
-				dataCount = dao.dataCount(pCategory_code);
+				pCategory_code = "";
+			}
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				keyword = URLDecoder.decode(keyword, "utf-8");
 			}
 			
+			
+			// 데이터 개수
+			int dataCount;
+			if(pCategory_code.length() == 0 && keyword.length() == 0) {
+				dataCount = dao.dataCount();
+			} else if(pCategory_code.length() != 0){
+				dataCount = dao.dataCount(pCategory_code);
+			} else {
+				dataCount = dao.searchCount(keyword);
+			}
+
 			// 페이지 수
 			int rows = 18; // 출력 상품 갯수 조절 가능(오리지날은 18개 출력)
 			int total_page = util.pageCount(rows, dataCount);
@@ -111,10 +127,13 @@ public class ProductServlet extends MyUploadServlet {
 			
 			// 게시물
 			List<ProductDTO> list = null;
-			if(pCategory_code.length() == 0) {
+			if(pCategory_code.length() == 0 && keyword.length() == 0) {
 				list = dao.listProduct(start, end);				
-			} else {
+			} else if(pCategory_code.length() != 0){
 				list = dao.listProduct(start, end, pCategory_code);
+			} else {
+				list = dao.searchProduct(start, end, keyword);
+				
 			}
 			
 			String query = "";
@@ -122,7 +141,10 @@ public class ProductServlet extends MyUploadServlet {
 				query = "pCategory_code=" + pCategory_code;
 			}
 			
-			// 페이징
+			if(keyword.length() != 0) {
+				query = "&keyword=" + keyword;
+			}
+			
 			String listUrl = cp + "/product/list.do";
 			String articleUrl = cp + "/product/article.do?page=" + current_page;
 			
@@ -137,9 +159,11 @@ public class ProductServlet extends MyUploadServlet {
 		
 			req.setAttribute("page", page);
 			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("articleUrl", articleUrl);
 			req.setAttribute("paging", paging);
 			req.setAttribute("pCategory_code", pCategory_code);
+			req.setAttribute("keyword", keyword);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,14 +178,12 @@ public class ProductServlet extends MyUploadServlet {
 		ProductDAO dao = new ProductDAO();
 		MyUtil util = new MyUtil();
 	
-				
 		String cp = req.getContextPath();
+		
 		try {
 			ProductDTO vo = new ProductDTO(); 
-					
 			
 			int current_page = 1;
-			
 			
 			String pCategory_code = req.getParameter("pCategory_code");
 			if(pCategory_code==null) {
@@ -197,7 +219,7 @@ public class ProductServlet extends MyUploadServlet {
 			
 			String query = "";
 			if(pCategory_code.length() != 0) {
-				query = "pCategory_code=" + pCategory_code;
+				query += "&pCategory_code=" + pCategory_code;
 			}
 			
 			// 페이징
