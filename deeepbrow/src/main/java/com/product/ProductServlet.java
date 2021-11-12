@@ -3,6 +3,7 @@ package com.product;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 import com.member.SessionInfo;
 import com.util.FileManager;
@@ -57,6 +60,14 @@ public class ProductServlet extends MyUploadServlet {
 			deleteImage(req, resp);
 		} else if (uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
+		} else if (uri.indexOf("reviewList.do") != -1) {
+			reviewList(req, resp);
+		} else if (uri.indexOf("review.do") != -1) {
+			reviewForm(req, resp);
+		} else if (uri.indexOf("review_ok.do") != -1) {
+			reviewSubmit(req, resp);
+		} else if (uri.indexOf("reviewDelete.do") != -1) {
+			reviewDelete(req, resp);
 		}
 	}
 
@@ -316,9 +327,10 @@ public class ProductServlet extends MyUploadServlet {
 			ProductDTO dto = dao.readProduct(pNo);
 			
 			if(dto == null) {
-				resp.sendRedirect(cp + "/product/list.do?"+query);
+				resp.sendRedirect(cp + "/product/manage.do?"+query);
 				return;
 			}
+			
 			
 			
 			List<ProductDTO> listImages = dao.listProductImage(pNo);
@@ -335,7 +347,7 @@ public class ProductServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp + "/product/list.do?page="+page);
+		resp.sendRedirect(cp + "/product/list.do?");
 		
 	}
 	
@@ -343,10 +355,11 @@ public class ProductServlet extends MyUploadServlet {
 		ProductDAO dao = new ProductDAO();
 		
 		String cp = req.getContextPath();
-		String page = req.getParameter("page");
+		String pCategory_code = req.getParameter("pCategory_code");
 		
 		try {
 			ProductDTO dto = new ProductDTO();
+			dto.setpNo(Integer.parseInt(req.getParameter("pNo")));
 			dto.setpCategory_code(req.getParameter("pCategory_code"));
 			dto.setpName(req.getParameter("pName"));
 			dto.setpPrice(Integer.parseInt(req.getParameter("pPrice")));
@@ -365,7 +378,7 @@ public class ProductServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp + "/product/list.do?page="+page);
+		resp.sendRedirect(cp + "/product/list.do?pCategory_code="+pCategory_code);
 
 	}
 	
@@ -408,7 +421,7 @@ public class ProductServlet extends MyUploadServlet {
 				
 				req.setAttribute("dto", dto);
 				req.setAttribute("listImage", listImage);
-				req.setAttribute("page", page);
+				
 				req.setAttribute("mode", "update");
 				
 				forward(req, resp, "/WEB-INF/views/product/write.jsp");
@@ -424,37 +437,133 @@ public class ProductServlet extends MyUploadServlet {
 	
 	
 	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ProductDAO dao = new ProductDAO();
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		ProductDAO dao = new ProductDAO();		
 		
-		String cp = req.getContextPath();
-		
-		
+		String state = "false";
 		try {
 			int pNo = Integer.parseInt(req.getParameter("pNo"));
-			
-			ProductDTO dto = dao.readProduct(pNo);
-			
-			if(dto == null) {
-				resp.sendRedirect(cp + "/product/manage.do");
-				return;
-			}
-			
-			
-			List<ProductDTO> listImage = dao.listProductImage(pNo);
-			for(ProductDTO vo : listImage) {
-				FileManager.doFiledelete(pathname , vo.getImage_name());
+		
+			if(dao.saleProductCount(pNo) ==  0) {
+				List<ProductDTO> listImage = dao.listProductImage(pNo);
+				for(ProductDTO vo : listImage) {
+					FileManager.doFiledelete(pathname , vo.getImage_name());
+					
+				}
 				
+				dao.deleteProductImage("all", pNo);
+				
+				dao.deleteProduct(pNo);
+				state = "true";
 			}
 			
-			dao.deleteProductImage("all", pNo);
 			
-			dao.deleteProduct(pNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp+"/product/manage.do");
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
+		
+		
+	}
+	
+	private void reviewList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ProductDAO dao = new ProductDAO();
+		MyUtil util = new MyUtil();
+		String cp = req.getContextPath();
+		
+		try {
+			
+			int rNo = Integer.parseInt(req.getParameter("rNo"));
+			
+			//데이터 개수
+			int reviewCount = dao.reviewCount();
+				
+			int rows = 5;		
+			int start = 1;
+			int end = reviewCount * rows;
+			
+			
+			// 게시물
+			List<ReviewDTO> listReview = dao.listReview(rNo, start, end);
+			
+			req.setAttribute("listReview", listReview);
+								
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		forward(req, resp, "/WEB-INF/views/product/list.jsp");
+	
+	}
+	
+	private void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ProductDAO dao = new ProductDAO();
+		int rNo = Integer.parseInt(req.getParameter("rNo"));
+		
+		//데이터 개수
+		int reviewCount = dao.reviewCount();
+				
+		int start = 1;
+		int end = reviewCount;
+		
+		
+		// 게시물
+		List<ReviewDTO> listReview = dao.listReview(rNo, start, end);
+				
+		req.setAttribute("listReview", listReview);
+		forward(req, resp, "/WEB-INF/views/product/review.jsp");
+		
+	}
+	
+	private void reviewSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ProductDAO dao = new ProductDAO();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			ReviewDTO dto = new ReviewDTO();
+			int pNo = Integer.parseInt(req.getParameter("pNo"));
+			int rNo = Integer.parseInt(req.getParameter("rNo"));
+			dto.setrNo(rNo);
+			dto.setmId(info.getUserId());
+			dto.setrContent(req.getParameter("rContent"));
+			dto.setpNo(pNo);
+			dto.setrRate(Integer.parseInt(req.getParameter("rRate")));
+			
+			Map<String, String[]> map = doFileUpload(req.getParts(), pathname);
+			if(map != null) {
+				String[] saveImages = map.get("saveFilenames");
+				dto.setImage_names(saveImages);
+			}
+			
+			
+			dao.insertReview(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void reviewDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ProductDAO dao = new ProductDAO();
+		
+		HttpSession session =  req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			int rNo = Integer.parseInt(req.getParameter("rNo"));
+			
+			dao.deleteReview(rNo, info.getUserId());
+			// AJAX 쓰기
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
 	}
 }

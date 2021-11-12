@@ -7,7 +7,6 @@ public class ProductDTO {
 	private String pDesc;
 	private int pStock;
 	private String pDate;
-	private int discount;
 	private String pCategory_code;
 	private String pCategory_name;
 	private String mId;
@@ -58,12 +57,6 @@ public class ProductDTO {
 	}
 	public void setpDate(String pDate) {
 		this.pDate = pDate;
-	}
-	public int getDiscount() {
-		return discount;
-	}
-	public void setDiscount(int discount) {
-		this.discount = discount;
 	}
 	
 	public String getpCategory_code() {
