@@ -58,18 +58,20 @@ $(function () {
 	$(".quantityBtnplus").click(function() {
 		var quantity = $("#result").text();
 		var price = $(".price").text();
+		price = price.replaceAll(",","");
 		
 		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
-		
+		s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		$(".totalPrice").html(s);
 	});
 	
 	$(".quantityBtnminus").click(function() {
 		var quantity = $("#result").text();
 		var price = $(".price").text();
+		price = price.replaceAll(",","");
 		
 		var s = "<p>총 금액 : <b>"+quantity*price+" 원</b></p>"
-		
+		s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		$(".totalPrice").html(s);
 	});
 });
@@ -78,14 +80,16 @@ $(function() {
 	$(".Buybtn").click(function(){
 		var pNo = "${dto.pNo}";
 		var quantity = $("#result").text(); 
-		var price = "${dto.pPrice}";
+		var calPrice = $(".price").text();
+		calPrice = calPrice.replaceAll(",","");
+		var price = quantity*calPrice;
+		
 		if(quantity == 0){
+			alert("상품 수량을 선택해주세요.");
 			return false;
 		}
-		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
-		
-		var url = "${pageContext.request.contextPath}/buy/buymain.do"+query;
-		
+		var query = "pNo="+pNo+"&quantity="+quantity+"&price="+price;
+		var url = "${pageContext.request.contextPath}/buy/buymain.do?"+query;
 		
 		location.href = url;
 	});
@@ -95,6 +99,7 @@ $(function() {
 		var quantity = $("#result").text(); 
 		var price = "${dto.pPrice}";
 		if(quantity == 0){
+			alert("상품 수량을 선택해주세요.");
 			return false;
 		}
 		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
@@ -104,8 +109,6 @@ $(function() {
 		
 		location.href = url;
 	});
-	
-	
 	
 });
 </script>
@@ -134,7 +137,10 @@ $(function() {
 									<td><span class="prdName">상품명 : <b>${dto.pName}</b></span></td>
 								</tr>
 								<tr>
-									<td><span class="prdPrice">가격 : <b class="price">${dto.pPrice}</b></span></td>
+									<td><span class="prdPrice">가격 : <b class="price">
+										<fmt:formatNumber value="${dto.pPrice }" type="number"/>
+										
+									</b></span>원</td>
 								</tr>
 								<tr>
 									<td><span class="prdDesc">설명 : <b>${dto.pDesc}</b></span></td>
