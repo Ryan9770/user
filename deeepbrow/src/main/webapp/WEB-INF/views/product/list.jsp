@@ -26,21 +26,21 @@
 <main>
 <div class="container">
 	<div class="contents">
-		<ul class="prdList grid-box">
-		
-			<c:forEach var="dto" items="${list}" varStatus="status">
-			<li>
-				<div class="prdImg">
-					<a href="${articleUrl}&pNo=${dto.pNo}"><img src="${pageContext.request.contextPath}/uploads/product/${dto.image_name}"> </a>
-				</div>
-				<div class="description">
-					<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdName"> 상품명 : </span><span> ${dto.pName} </span></a>
-					<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdPrice"> 상품가격 : </span><span> ${dto.pPrice} </span></a>
-				</div>
-			</li>
-			</c:forEach>
-		
-		</ul>	
+		<div class="prdList" >
+			<div class="grid-box">
+				<c:forEach var="dto" items="${list}" varStatus="status" >
+					<div class="item">
+						<div class="prdImg">
+							<a href="${articleUrl}&pNo=${dto.pNo}"><img src="${pageContext.request.contextPath}/uploads/product/${dto.image_name}"> </a>
+						</div>
+						<div class="description">
+							<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdName"> 상품명 : </span><span> ${dto.pName}</span></a>
+							<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdPrice"> 상품가격 : </span><span><fmt:formatNumber value="${dto.pPrice}" pattern="#,###" /></span></a>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+		</div>	
 	</div>
 	<div class="page-box">
 			${dataCount == 0 ? "등록된 게시물이 없습니다.": paging}
