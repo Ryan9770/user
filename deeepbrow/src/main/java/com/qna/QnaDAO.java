@@ -449,7 +449,7 @@ public class QnaDAO {
 			} else {
 				sb.append(" SELECT * FROM ( ");
 				sb.append("     SELECT qNo, qSubject FROM qna ");
-				sb.append("     WHERE qNo > ? ");
+				sb.append("     WHERE qNo < ? ");
 				sb.append("     ORDER BY qNo ASC ");
 				sb.append(" ) WHERE ROWNUM = 1 ");
 
