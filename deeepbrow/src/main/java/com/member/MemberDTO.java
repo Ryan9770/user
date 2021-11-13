@@ -13,7 +13,6 @@ public class MemberDTO {
 	private String mAddr1;
 	private String mAddr2;
 	private String mTel, mTel1, mTel2, mTel3;
-	private int listNum;
 	
 	public String getmId() {
 		return mId;
@@ -117,11 +116,6 @@ public class MemberDTO {
 	public void setmTel3(String mTel3) {
 		this.mTel3 = mTel3;
 	}
-	public int getListNum() {
-		return listNum;
-	}
-	public void setListNum(int listNum) {
-		this.listNum = listNum;
-	}
+	
 	
 }

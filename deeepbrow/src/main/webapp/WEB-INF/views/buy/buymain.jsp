@@ -419,22 +419,66 @@ function naverPay(){
 	  oPay.open({
 	    "merchantUserKey": "deeepbrowKey",
 	    "merchantPayKey": "deeepbrowPayKey",
-	    "productName": "상품명을 입력하세요",
+	    "productName": "${dto.pName }",
 	    "totalPayAmount": "100",
 	    "taxScopeAmount": "100",
 	    "taxExScopeAmount": "0",
-	    "returnUrl": "사용자 결제 완료 후 결제 결과를 받을 URL"
+	    "returnUrl": "${pageContext.request.contextPath}/buy/buy_ok.do"
 	  });
 	});
 }
 
 function cardPay() {
-	alert("카드 결제창");
+	var f = document.buyForm;
+	
+	var str;
+	
+	str1 = f.phone1.value;
+	if( ! /^[0-9]{4}$/.test(str1) ) {
+		alert("휴대폰 번호는 4자리만 가능합니다");
+		f.phone1.focus();
+		return;
+	}
+	
+	str2 = f.phone2.value;
+	if( ! /^[0-9]{4}$/.test(str2) ) {
+		alert("휴대폰 번호는 4자리만 가능합니다");
+		f.phone2.focus();
+		return;
+	}
+	
+	if(str1 == str2) {
+		alert("휴대폰 번호는 같을 수 없습니다.");
+		return;
+	}
+	
+	f.action = "${pageContext.request.contextPath}/buy/buy_ok.do";
+	f.submit();
+	
 	return;
 }
 
 function accountPay() {
-	alert("무통장 입금 결제창");
+	var f = document.buyForm;
+	var str;
+	
+	str = f.phone1.value;
+	if( /[0-9]{4}$/.test(str) ) {
+		alert("휴대폰 번호는 4자리만 가능합니다");
+		f.phone1.focus();
+		return;
+	}
+	
+	str = f.phone2.value;
+	if( /[0-9]{4}$/.test(str) ) {
+		alert("휴대폰 번호는 4자리만 가능합니다");
+		f.phone2.focus();
+		return;
+	}
+	
+	
+	f.action = "${pageContext.request.contextPath}/buy/buy_ok.do";
+	f.submit();
 	return;
 }
 
@@ -443,6 +487,8 @@ function microHome() {
     win.focus();
     return;
 }
+
+
 
 </script>
 
@@ -497,6 +543,26 @@ $(function(){
 		
 	});
 	
+	$("#emailSelect").change(function(){
+		var v = $(this).val();
+		$("#emailSelectText").val(v);
+		
+		if($("#emailSelectText").val() == "") {
+			$("#emailSelectText").attr("readonly", false);
+		} else {
+			$("#emailSelectText").attr("readonly", true);
+		}
+		
+		return;
+
+	});
+	
+	$("#phonNum").change(function(){
+		var v = $("#phonNum option:selected").val();
+		$("#phonNumHidden").val(v);
+	});
+
+	
 });
 </script>
 </head>
@@ -509,7 +575,7 @@ $(function(){
 <main>
 	<div class="container">
 		<div class="content">
-			<form action="" name="productInfo">
+			<form action="" name="buyForm" method="post">
 				<div class="firsetBox">
 					<div>
 						<h3>혜택 정보</h3>
@@ -536,6 +602,7 @@ $(function(){
 					</div>
 				</div>
 				<!-- 상단 혜택정보 -->
+
 				<div class="secondtBox">
 					<div>
 						<table>
@@ -561,12 +628,13 @@ $(function(){
 									</td>
 									<td>
 										<a href="#" class="productimgSet">
-											<img class="productimg" alt="product img" src="${pageContext.request.contextPath}/resource/images/aa.jpg">
+											<img class="productimg" alt="product img" src="${pageContext.request.contextPath}/uploads/product/${dto3.imageFilename}">
 										</a>
 									</td>
 									<td>
 										<strong>
-											<a href="#">${dto.pName }</a>
+											<a href="#" id="pName">${dto.pName }</a>
+											<input name="pNo" type="hidden" value="${pNo }">
 										</strong>
 										<div>
 											[옵션: 없음]
@@ -575,10 +643,13 @@ $(function(){
 									<td>
 										<div>
 											<fmt:formatNumber value="${dto.pPrice }" type="number"/>
+											<input type="hidden" name="onePrice" value="${dto.pPrice }">
 											원
 										</div>
 									</td>
-									<td>${quantity }개</td>
+									<td>${quantity }개
+										<input type="hidden" name="proQuantity" value="${quantity }">
+									</td>
 									<td>
 										<span>2,000원</span>
 									</td>
@@ -605,20 +676,18 @@ $(function(){
 									</td>
 									<td>
 										<span>[기본배송]</span>
-										<span>상품 구매 금액 : 105,000</span>
+										<span>상품 구매 금액 : <fmt:formatNumber value="${price }" type="number"/></span>
 										<span> + 배송비 : 0 (무료)</span>
 										<span> = 합계 : </span>
-										<span>105,000</span>
+										<span><fmt:formatNumber value="${price }" type="number"/></span>
 									</td>
 								</tr>
 							</tfoot>
 						</table>
 					</div>
 				</div>
-			</form>
 			<!-- 상품 정보 확인 -->
 			
-			<form action="shipment">
 				<div style="float: left;">
 					<ul>
 						<li style="list-style: none; color: tomato; margin-left: 10px;">
@@ -670,15 +739,15 @@ $(function(){
 							<tr>
 								<th>주소 <i class="fas fa-asterisk" id="asterisk"></i></th>
 								<td>
-									<input type="text" readonly="readonly" style="width: 100px;" id="zip" value="${dto2.mZipcode}">
+									<input type="text" readonly="readonly" style="width: 100px;" id="zip" name="zip" value="${dto2.mZipcode}">
 									<a>
 										<button type="button" class="zipButton" onclick="daumPostcode();">우편번호</button>
 									</a>
 									<br><br>
-									<input type="text" readonly="readonly" style="width: 500px;" id="addr1" value="${dto2.mAddr1}">
+									<input type="text" readonly="readonly" style="width: 500px;" id="addr1" name="addr1" value="${dto2.mAddr1}">
 									<span>기본 주소</span>
 									<br><br>
-									<input type="text" style="width: 500px;" id="addr2" value="${dto2.mAddr2}">
+									<input type="text" style="width: 500px;" id="addr2" name="addr2" value="${dto2.mAddr2}">
 									<span>나머지 주소</span>
 								</td>
 							</tr>
@@ -698,25 +767,28 @@ $(function(){
 							<tr>
 								<th>휴대 전화 <i class="fas fa-asterisk" id="asterisk"></i></th>
 								<td>
-									<select>
-										<option>010</option>
-										<option>011</option>
+									<select id="phonNum">
+										<option value="010">010</option>
+										<option value="011">011</option>
 									</select>
+									<input type="hidden" id="phonNumHidden" name="phonNum" value="010">
 									-
-									<input type="text">
+									<input type="text" name="phone1">
 									-
-									<input type="text">
+									<input type="text" name="phone2">
 								</td>
 							</tr>
 							<tr>
 								<th>이메일 <i class="fas fa-asterisk" id="asterisk"></i></th>
 								<td>
-									<input type="text">
+									<input type="text" name="email1">
 									@
-									<input type="text" readonly="readonly" value="naver.com">
-									<select>
-										<option>naver.com</option>
-										<option>daum.net</option>
+									<input type="text" id="emailSelectText" name="email2" readonly="readonly" value="naver.com">
+									<select name="emailSelect" id="emailSelect">
+										<option value="naver.com">naver.com</option>
+										<option value="daum.net">daum.net</option>
+										<option value="google.com">google.com</option>
+										<option value="">직접 입력</option>
 									</select>
 									<p>
 										이메일을 통해 주문처리과정을 보내드립니다.
@@ -728,7 +800,7 @@ $(function(){
 							<tr>
 								<th>배송 메시지</th>
 								<td>
-									<textarea rows="5" cols="70"></textarea>
+									<textarea rows="5" cols="70" name="memo"></textarea>
 								</td>
 							</tr>
 						</table>
@@ -753,7 +825,7 @@ $(function(){
 							<tr>
 								<td>
 									<div>
-										105,000
+										<fmt:formatNumber value="${price }" type="number"/>
 									</div>
 								</td>
 								<td>
@@ -763,7 +835,8 @@ $(function(){
 								</td>
 								<td>
 									<div>
-										= 105,000
+										= <fmt:formatNumber value="${price }" type="number"/>
+										<input type="hidden" name="wholePrice" value="${price }">
 									</div>
 								</td>
 							</tr>
@@ -794,10 +867,8 @@ $(function(){
 						</tfoot>
 					</table>
 				</div>
-			</form>
 				<!-- 결제 예정 금액, 적립금 -->
 				
-				<form action="" name="pay">
 					<div class="payinfo">
 						<h3>결제 수단</h3>
 						<span>
@@ -867,7 +938,7 @@ $(function(){
 						<div class="paysecondbox">
 							<div>
 								<h4>최종 결제 금액</h4>
-								<p>105,000</p>
+								<p><fmt:formatNumber value="${price }" type="number"/></p>
 								<div class="paysecondButton"><a><button type="button" id="PayBtn" onclick="naverPay();">결제하기</button></a></div>
 								<div class="pointSave">
 									<div>총 적립 예정 금액 : 2100원</div>
@@ -882,7 +953,6 @@ $(function(){
 							</div>
 						</div>
 					</div>
-				</form>
 				<!-- 결제창 -->
 				
 				<div class="info1">
@@ -942,6 +1012,7 @@ $(function(){
 						</ul>
 					</div>
 				</div>
+				</form>
 			</div>
 			<!-- 이용안내 -->
 		</div>	
