@@ -171,7 +171,7 @@ public class DeliveryDAO {
 					+ "dName, dTel, dZipCode, dAddr1, dAddr2, del_memo, delNo, ds_manage "
 					+ "FROM delivery d "
 					+ "JOIN product_order po ON d.orderNo = po.orderNo "
-					+ "JOIN delivery_status ds ON d.orderNo = ds.orderNo "
+					+ "LEFT OUTER JOIN delivery_status ds ON d.orderNo = ds.orderNo "
 					+ "WHERE po.orderNo = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
