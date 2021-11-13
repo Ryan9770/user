@@ -3,9 +3,7 @@ package com.member;
 public class SessionInfo {
 	private String userId;
 	private String userName;
-
 	private int userRoll;
-
 	
 	public String getUserId() {
 		return userId;
@@ -25,8 +23,4 @@ public class SessionInfo {
 	public void setUserRoll(int userRoll) {
 		this.userRoll = userRoll;
 	}
-
-		
-	
 }
-	

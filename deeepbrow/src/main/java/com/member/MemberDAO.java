@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import com.util.DBConn;
 
@@ -230,5 +233,187 @@ public class MemberDAO {
 			}
 		}
 		return result;
+	}
+	
+	public int dataCount() {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM member";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	// 데이터 개수
+	public int dataCount(String condition, String keyword) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM member mId ";
+			sql += "  WHERE INSTR(" + condition + ", ?) >= 1 ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, keyword);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next() ) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public List<MemberDTO> listMember(int start, int end){
+		List<MemberDTO> list = new ArrayList<MemberDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			sb.append(" SELECT * FROM ( ");
+			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
+			sb.append("         SELECT mNo, mName, mId, mEmail, mTel, TO_CHAR(mReg_date, 'YYYY-MM-DD') mReg_date");
+			sb.append("         FROM member ");
+			sb.append("         ORDER BY mReg_date ASC ");
+			sb.append("     ) tb WHERE ROWNUM <= ? ");
+			sb.append(" ) WHERE rnum >= ? ");
+
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setInt(1, end);
+			pstmt.setInt(2, start);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				MemberDTO dto = new MemberDTO();
+				
+				dto.setmNo(rs.getString("mNo"));
+				dto.setmName(rs.getString("mName"));
+				dto.setmId(rs.getString("mId"));
+				dto.setmEmail(rs.getString("mEmail"));
+				dto.setmTel(rs.getString("mTel"));
+				dto.setmReg_date(rs.getString("mReg_date"));
+				
+				list.add(dto);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return list;
+	}
+	
+	public List<MemberDTO> listMember(int start, int end, String condition, String keyword) {
+		List<MemberDTO> list = new ArrayList<MemberDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			sb.append(" SELECT * FROM ( ");
+			sb.append("     SELECT ROWNUM rnum, tb.* FROM ( ");
+			sb.append("         SELECT mNo, mName, mId, mEmail, mTel, ");
+			sb.append("               TO_CHAR(mReg_date, 'YYYY-MM-DD') mReg_date ");
+			sb.append("         FROM member ");
+			sb.append("         WHERE INSTR(" + condition + ", ?) >= 1 ");
+			sb.append("         ORDER BY mReg_date ASC");
+			sb.append("     ) tb WHERE ROWNUM <= ? ");
+			sb.append(" ) WHERE rnum >= ? ");
+
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, keyword);
+			pstmt.setInt(2, end);
+			pstmt.setInt(3, start);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				MemberDTO dto = new MemberDTO();
+
+				dto.setmNo(rs.getString("mNo"));
+				dto.setmName(rs.getString("mName"));
+				dto.setmId(rs.getString("mId"));
+				dto.setmEmail(rs.getString("mEmail"));
+				dto.setmTel(rs.getString("mTel"));
+				dto.setmReg_date(rs.getString("mReg_date"));
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e2) {
+				}
+			}
+		}
+
+		return list;
 	}
 }
