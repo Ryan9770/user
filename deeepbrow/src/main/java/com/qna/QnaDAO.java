@@ -154,7 +154,7 @@ public class QnaDAO {
 			sb.append("         	group by pno ");
 			sb.append("          ) pi on p.pno = pi.pno ");
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
-			sb.append(" ) WHERE rnum >= ? ");
+			sb.append(" ) WHERE rnum >= ? order by qreg_date desc");
 
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -234,7 +234,7 @@ public class QnaDAO {
 				sb.append("     WHERE INSTR(" + condition + ", ?) >= 1 ");
 			}
 			sb.append("     ) tb WHERE ROWNUM <= ? ");
-			sb.append(" ) WHERE rnum >= ? ");
+			sb.append(" ) WHERE rnum >= ? order by qreg_date desc");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -351,7 +351,7 @@ public class QnaDAO {
 		try {
 			if (keyword != null && keyword.length() != 0) {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("    SELECT qNo, qSubject ");
+				sb.append("    SELECT qNo, qSubject, qReg_date");
 				sb.append("    FROM qna q ");
 				sb.append("    JOIN member m ON q.mId = m.mId ");
 				sb.append("    WHERE ( qNo > ? ) ");
@@ -364,7 +364,7 @@ public class QnaDAO {
 					sb.append("   AND ( INSTR(" + condition + ", ?) >= 1 ) ");
 				}
 				sb.append("     ORDER BY qNo ASC ");
-				sb.append(" ) WHERE ROWNUM = 1 ");
+				sb.append(" ) WHERE ROWNUM = 1 order by qreg_date desc");
 
 				pstmt = conn.prepareStatement(sb.toString());
 				
@@ -375,10 +375,10 @@ public class QnaDAO {
 				}
 			} else {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("     SELECT qNo, qSubject FROM qna ");
+				sb.append("     SELECT qNo, qSubject, qReg_date FROM qna ");
 				sb.append("     WHERE qNo > ? ");
 				sb.append("     ORDER BY qNo ASC ");
-				sb.append(" ) WHERE ROWNUM = 1 ");
+				sb.append(" ) WHERE ROWNUM = 1 order by qreg_date desc");
 
 				pstmt = conn.prepareStatement(sb.toString());
 				
@@ -391,6 +391,7 @@ public class QnaDAO {
 				dto = new QnaDTO();
 				dto.setqNo(rs.getInt("qNo"));
 				dto.setqSubject(rs.getString("qSubject"));
+				dto.setqReg_date(rs.getString("qReg_date"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -424,7 +425,7 @@ public class QnaDAO {
 		try {
 			if (keyword != null && keyword.length() != 0) {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("    SELECT qNo, qSubject ");
+				sb.append("    SELECT qNo, qSubject, qReg_date ");
 				sb.append("    FROM qna q ");
 				sb.append("    JOIN member m ON q.mId = m.mId ");
 				sb.append("    WHERE ( qNo < ? ) ");
@@ -437,7 +438,7 @@ public class QnaDAO {
 					sb.append("   AND ( INSTR(" + condition + ", ?) >= 1 ) ");
 				}
 				sb.append("     ORDER BY qNo DESC ");
-				sb.append(" ) WHERE ROWNUM = 1 ");
+				sb.append(" ) WHERE ROWNUM = 1 order by qreg_date desc");
 
 				pstmt = conn.prepareStatement(sb.toString());
 				
@@ -448,10 +449,10 @@ public class QnaDAO {
 				}
 			} else {
 				sb.append(" SELECT * FROM ( ");
-				sb.append("     SELECT qNo, qSubject FROM qna ");
+				sb.append("     SELECT qNo, qSubject, qReg_date FROM qna ");
 				sb.append("     WHERE qNo < ? ");
-				sb.append("     ORDER BY qNo ASC ");
-				sb.append(" ) WHERE ROWNUM = 1 ");
+				sb.append("     ORDER BY qNo desc ");
+				sb.append(" ) WHERE ROWNUM = 1 order by qreg_date");
 
 				pstmt = conn.prepareStatement(sb.toString());
 				
@@ -464,6 +465,7 @@ public class QnaDAO {
 				dto = new QnaDTO();
 				dto.setqNo(rs.getInt("qNo"));
 				dto.setqSubject(rs.getString("qSubject"));
+				dto.setqReg_date(rs.getString("qReg_date"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
