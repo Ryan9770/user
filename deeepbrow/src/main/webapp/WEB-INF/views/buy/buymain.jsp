@@ -603,7 +603,6 @@ $(function(){
 				</div>
 				<!-- 상단 혜택정보 -->
 
-
 				<div class="secondtBox">
 					<div>
 						<table>

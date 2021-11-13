@@ -42,7 +42,15 @@ public class MemberServlet extends MyServlet {
 			updateSubmit(req, resp);
 		} else if (uri.indexOf("userIdCheck.do") != -1) {
 			userIdCheck(req, resp);
+		} else if (uri.indexOf("basket.do") != -1) {
+			basket(req, resp);
 		}
+	}
+	
+	private void basket(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/member/basket.jsp";
+		forward(req, resp, path);
+		
 	}
 	
 	private void loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
