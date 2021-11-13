@@ -83,7 +83,7 @@ function searchItem() {
 		</ul>
 		<c:if test="${sessionScope.member.userId=='admin'}">
 			<ul class="category admin">
-				<li><a>회원관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/member/list.do">회원관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/product/manage.do">재고관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/asale/list.do">판매현황</a></li>
 				<li><a href="${pageContext.request.contextPath}/delivery/list.do">주문관리</a></li>

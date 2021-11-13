@@ -11,23 +11,17 @@
 
 
 <style type="text/css">
-main .container {
-	margin: 70px auto 50px;
-	width: 450px;
-	padding: 10px;
-	min-height: 200px; 
+main {
+	box-sizing: border-box;
+	height: 700px;
 }
 
 .title-body {
-	padding: 10px 0;
-	text-align: center;
+	padding: 50px 0; text-align: center;
 }
 
 .title-body .article-title {
-	font-weight: bold;
-	font-size: 27px;
-
-	
+	font-size: 20px; cursor: pointer;
 }
 
 .form-body {
@@ -35,17 +29,19 @@ main .container {
 }
 
 .form-body .inputTF {
-  width: 100%;
-  height: 45px;
-  padding: 5px;
-  padding-left: 15px;
-  border:1px solid #666;
-  
+	width: 100%;
+	height: 45px;
+	padding: 5px;
+	padding-left: 15px;
+	border: none;
+	border-bottom: 1px solid white;
+	background: black;
+	color: white;
 }
 
-.form-table {
-	border: none;
-	
+.table{
+	margin: 0 auto;
+	width: 400px;
 }
 .form-table tr:first-child td {
 	padding-top: 20px;
