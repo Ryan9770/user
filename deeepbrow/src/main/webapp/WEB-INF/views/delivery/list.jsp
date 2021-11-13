@@ -8,8 +8,7 @@
 <meta charset="UTF-8">
 <title>deeepbrow</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 <style type="text/css">
 .title-body {
 	padding: 50px 0; text-align: center;
@@ -180,6 +179,10 @@ function showDetails(orderNo) {
 			</c:forEach>
 		</tbody>
 	</table>
+	
+	<div class="page-box">
+		${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+	</div>
 </div>
 
 </main>
