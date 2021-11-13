@@ -25,8 +25,8 @@ public class AsaleServlet extends MyServlet {
 	}
 	
 	protected void listForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/asale/list.jsp";
-		forward(req, resp, path);
+		
+		forward(req, resp, "/WEB-INF/views/asale/list.jsp");
 	}
 	
 	
