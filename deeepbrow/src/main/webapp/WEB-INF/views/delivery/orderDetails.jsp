@@ -29,15 +29,6 @@ a:active, a:hover {
 	color: #F28011;
 }
 
-.title-body {
-	padding: 50px 0; text-align: center;
-}
-
-.title-body .article-title {
-	font-size: 20px; cursor: pointer;
-	font-weight: bold;
-}
-
 .orderNo {
 	position: absolute;
 	left: 680px;
@@ -107,7 +98,7 @@ i{
  	<div class="title-body">
       <span class="article-title">주문상세정보</span>
    </div>
-   	<h3 class="orderNo"> 주문번호 : ${dto.orderNo} </h3>
+   	<span class="orderNo"> 주문번호 : ${dto.orderNo} </span>
    	
 	<table class="table-stock paginated">
 			

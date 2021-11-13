@@ -275,7 +275,7 @@ function sendOk() {
 
 <div class="popup-dialog" style="display: none;">
 	<div style="padding: 10px 0 20px 0;" align="center">
-		<input type="text" id="keyword" class="boxTF" style="width: 60%;" placeholder="상품을 검색하세요">
+		<input type="text" id="keyword" class="boxTF" style="width: 60%;" placeholder="상품이름을 검색하세요">
 		<button type="button" class="modalSearch" >검색</button>
 	</div>
 	<hr>

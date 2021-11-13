@@ -29,15 +29,6 @@ a:active, a:hover {
 	color: #F28011;
 }
 
-.title-body {
-	padding: 50px 0; text-align: center;
-}
-
-.title-body .article-title {
-	font-size: 20px; cursor: pointer;
-	font-weight: bold;
-}
-
 .box{
 	width: 700px;
 	margin: 30px auto;
