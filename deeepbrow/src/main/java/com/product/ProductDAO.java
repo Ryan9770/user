@@ -346,12 +346,11 @@ public class ProductDAO {
 			String sql;
 
 			try {
-				sql = "SELECT NVL(COUNT(*), 0) FROM Product WHERE INSTR(pName,  ?) >= 1 OR INSTR(pDesc, ?) >= 1";
+				sql = "SELECT NVL(COUNT(*), 0) FROM Product WHERE INSTR(pName,  ?) >= 1";
 				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, keyword);
-				pstmt.setString(2, keyword);
 				
 				rs = pstmt.executeQuery();
 				if (rs.next())
@@ -400,7 +399,7 @@ public class ProductDAO {
 				sb.append("						FROM Product_image");
 				sb.append("					) WHERE rank = 1 ");
 				sb.append("				) pi ON p.pNo = pi.pNo ");
-				sb.append("             WHERE INSTR(pName, ?) >= 1 OR INSTR(pDesc, ?) >= 1 ");
+				sb.append("             WHERE INSTR(pName, ?) >= 1");
 				sb.append("				ORDER BY pNo DESC ");
 				sb.append("			) tb WHERE ROWNUM <= ? ");
 				sb.append(" ) WHERE rnum >= ? ");
@@ -408,9 +407,8 @@ public class ProductDAO {
 				pstmt = conn.prepareStatement(sb.toString());
 
 				pstmt.setString(1, keyword);
-				pstmt.setString(2, keyword);
-				pstmt.setInt(3, end);
-				pstmt.setInt(4, start);
+				pstmt.setInt(2, end);
+				pstmt.setInt(3, start);
 
 				rs = pstmt.executeQuery();
 				while(rs.next()) {
