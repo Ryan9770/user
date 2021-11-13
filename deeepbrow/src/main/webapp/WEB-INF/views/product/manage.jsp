@@ -83,6 +83,8 @@ i{
 	height: 40px;
 }
 
+
+
 .clickable { cursor: pointer; }
 .hover { color: darkblue; }
 
@@ -93,12 +95,60 @@ i{
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 
-function deleteProduct(data) {
-    if(confirm("게시글을 삭제 하시 겠습니까 ? ")) {
-	    var url = "${pageContext.request.contextPath}/product/delete.do?pNo=" + data;
-    	location.href = url;
-    }
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 405) {
+				alert("접근을 허용하지 않습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
 }
+
+// 상품 삭제 여부
+$(function(){
+	$(".btn-delete").click(function(){
+		var $tr = $(this).closest("tr");
+		var msg = "상품을 삭제하시겠습니까? ";
+		if(! confirm( msg )) {
+			return false;
+		}
+		
+		var url = "${pageContext.request.contextPath}/product/delete.do";
+		var pNo = $(this).attr("data-pNo");
+		
+		var query = "pNo=" + pNo;
+
+		var fn = function(data) {
+			var state = data.state;
+			if(state === "true") {
+				$tr.remove();
+			} else if(state === "false") {
+				alert("판매된 상품은 제거하실수 없습니다.");
+				return false;
+			}
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
 
 </script>
 
@@ -112,7 +162,7 @@ function deleteProduct(data) {
 
 	<table class="table-stock paginated">
 		
-		<h1>재고관리 호호호</h1>
+		<h1>재고관리</h1>
 			<div><a class="add" href="${pageContext.request.contextPath}/product/write.do"><i class="fas fa-cart-plus"></i></a> </div>
 		<thead style="clear: both;">
 			<tr>
@@ -130,13 +180,13 @@ function deleteProduct(data) {
 		<c:forEach var="vo" items="${list}">
 			<tr class="row_tr">
 				<td>${vo.pNo}</td>
-				<td>${vo.pName}</td>
+				<td class="clickable" onclick="location.href='${pageContext.request.contextPath}/product/article.do?pNo=${vo.pNo}';">${vo.pName}</td>
 				<td>${vo.pDate}</td>
 				<td>${vo.pPrice}</td>
 				<td>${vo.pStock}</td>
 				<td>${vo.pDesc}</td>
 				<td>${vo.pCategory_name}</td>
-				<td><span class="btn-update" data-pNo="${vo.pNo}" onclick="location.href='${pageContext.request.contextPath}/product/update.do?pNo=${vo.pNo}';">수정</span> | <span class="btn-delete" data-pNo="${vo.pNo}" onclick="deleteProduct('${vo.pNo}');">삭제</span></td>
+				<td><span class="btn-update" data-pNo="${vo.pNo}" onclick="location.href='${pageContext.request.contextPath}/product/update.do?pNo=${vo.pNo}';">수정</span> | <span class="btn-delete" data-pNo="${vo.pNo}">삭제</span></td>
 			</tr>
 		</c:forEach>
 		</tbody>
