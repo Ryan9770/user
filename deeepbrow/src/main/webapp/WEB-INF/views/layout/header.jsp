@@ -57,7 +57,7 @@ function searchItem() {
 				<br><br>
 				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a>
 				&nbsp;/&nbsp;
-				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">장바구니</a>
+				<a href="${pageContext.request.contextPath}/member/basket.do">장바구니</a>
 		</c:if>
 	</div>
 	<div class="menu">
