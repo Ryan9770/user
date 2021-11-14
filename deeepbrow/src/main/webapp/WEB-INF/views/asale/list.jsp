@@ -53,8 +53,8 @@
 				<td>제품 번호</td>
 				<td>제품 이름</td>
 				<td>제품 가격</td>
-				<td>팔린 갯수</td>
-				<td>총합계</td>
+				<td>판매 개수</td>
+				<td>총 합계</td>
 			</tr>
 			<c:set var = "sum" value = "0"/>
 			<c:forEach var="dto" items="${list}">
@@ -62,7 +62,7 @@
 					<td>${dto.pNo}</td>
 					<td>${dto.pName}</td>
 					<td><fmt:formatNumber value="${dto.pPrice}" pattern="#,###"/>원</td>
-					<td>${dto.pCount}</td>
+					<td>${dto.pCount}개</td>
 					<td><fmt:formatNumber value="${dto.pPrice * dto.pCount}" pattern="#,###"/>원</td>
 				</tr>
 				<c:set var="sum" value="${sum + dto.pPrice * dto.pCount}"/>
