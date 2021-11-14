@@ -175,21 +175,15 @@ function deleteFile(pNo) {
 				<tr> 
 					<td>상&nbsp;품&nbsp;가&nbsp;격</td>
 					<td> 
-						<p><input type="text" name="pPrice" maxlength="100" class="boxTF" value="${dto.pPrice}" pattern="\d+"></p>
+						<p><input type="text" name="pPrice" maxlength="100" class="boxTF" value="${dto.pPrice}" pattern="\d*"></p>
 					</td>
 				</tr>
 				<tr> 
 					<td>수&nbsp;량</td>
 					<td> 
-						<p><input type="text" name="pStock" class="boxTA" pattern="\d+"></p>
+						<p><input type="text" name="pStock" class="boxTA"  value="${dto.pStock}" pattern="\d*"></p>
 					</td>
 				</tr>
-				<!-- <tr> 
-					<td>할&nbsp;인&nbsp;률</td>
-					<td> 
-						<p><input type="text" name="Discount" class="boxTA" pattern="\d+"></p>
-					</td>
-				</tr> -->
 				<tr> 
 					<td>상&nbsp;품&nbsp;설&nbsp;명</td>
 					<td> 
@@ -208,7 +202,7 @@ function deleteFile(pNo) {
 						<td> 
 							<div class="img-box">
 								<c:forEach var="dto" items="${list}">
-									<img src="${pageContext.request.contextPath}/uploads/Product/${dto.image_name}"
+									<img src="${pageContext.request.contextPath}/uploads/product/${dto.image_name}"
 										onclick="deleteFile('${dto.imageNo}');">
 								</c:forEach>
 							</div>

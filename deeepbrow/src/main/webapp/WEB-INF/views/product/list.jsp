@@ -35,7 +35,7 @@
 						</div>
 						<div class="description">
 							<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdName"> 상품명 : </span><span> ${dto.pName}</span></a>
-							<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdPrice"> 상품가격 : </span><span><fmt:formatNumber value="${dto.pPrice}" pattern="#,###" /></span></a>
+							<a href="${articleUrl}&pNo=${dto.pNo}"><span class="prdPrice"> 상품가격 : </span><span><fmt:formatNumber value="${dto.pPrice}" pattern="#,###"/></span></a>
 						</div>
 					</div>
 				</c:forEach>

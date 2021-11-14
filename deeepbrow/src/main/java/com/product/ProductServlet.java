@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import com.member.SessionInfo;
+import com.order.BuyDAO;
+import com.order.BuyDTO;
 import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
@@ -62,14 +65,6 @@ public class ProductServlet extends MyUploadServlet {
 			deleteImage(req, resp);
 		} else if (uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
-		} else if (uri.indexOf("reviewList.do") != -1) {
-			reviewList(req, resp);
-		} else if (uri.indexOf("review.do") != -1) {
-			reviewForm(req, resp);
-		} else if (uri.indexOf("review_ok.do") != -1) {
-			reviewSubmit(req, resp);
-		} else if (uri.indexOf("reviewDelete.do") != -1) {
-			reviewDelete(req, resp);
 		}
 	}
 
@@ -115,7 +110,7 @@ public class ProductServlet extends MyUploadServlet {
 			}
 
 			// 페이지 수
-			int rows = 18; // 출력 상품 갯수 조절 가능(오리지날은 18개 출력)
+			int rows = 3; // 출력 상품 갯수 조절 가능(오리지날은 18개 출력)
 			int total_page = util.pageCount(rows, dataCount);
 			if(current_page > total_page) {
 				current_page = total_page;
@@ -491,101 +486,5 @@ public class ProductServlet extends MyUploadServlet {
 		out.print(job.toString());
 		
 		
-	}
-	
-	private void reviewList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ProductDAO dao = new ProductDAO();
-		MyUtil util = new MyUtil();
-		String cp = req.getContextPath();
-		
-		try {
-			
-			int rNo = Integer.parseInt(req.getParameter("rNo"));
-			
-			//데이터 개수
-			int reviewCount = dao.reviewCount();
-				
-			int rows = 5;		
-			int start = 1;
-			int end = reviewCount * rows;
-			
-			
-			// 게시물
-			List<ReviewDTO> listReview = dao.listReview(rNo, start, end);
-			
-			req.setAttribute("listReview", listReview);
-								
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		forward(req, resp, "/WEB-INF/views/product/list.jsp");
-	
-	}
-	
-	private void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ProductDAO dao = new ProductDAO();
-		int rNo = Integer.parseInt(req.getParameter("rNo"));
-		
-		//데이터 개수
-		int reviewCount = dao.reviewCount();
-				
-		int start = 1;
-		int end = reviewCount;
-		
-		
-		// 게시물
-		List<ReviewDTO> listReview = dao.listReview(rNo, start, end);
-				
-		req.setAttribute("listReview", listReview);
-		forward(req, resp, "/WEB-INF/views/product/review.jsp");
-		
-	}
-	
-	private void reviewSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ProductDAO dao = new ProductDAO();
-		
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		try {
-			ReviewDTO dto = new ReviewDTO();
-			int pNo = Integer.parseInt(req.getParameter("pNo"));
-			int rNo = Integer.parseInt(req.getParameter("rNo"));
-			dto.setrNo(rNo);
-			dto.setmId(info.getUserId());
-			dto.setrContent(req.getParameter("rContent"));
-			dto.setpNo(pNo);
-			dto.setrRate(Integer.parseInt(req.getParameter("rRate")));
-			
-			Map<String, String[]> map = doFileUpload(req.getParts(), pathname);
-			if(map != null) {
-				String[] saveImages = map.get("saveFilenames");
-				dto.setImage_names(saveImages);
-			}
-			
-			
-			dao.insertReview(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void reviewDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ProductDAO dao = new ProductDAO();
-		
-		HttpSession session =  req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		try {
-			int rNo = Integer.parseInt(req.getParameter("rNo"));
-			
-			dao.deleteReview(rNo, info.getUserId());
-			// AJAX 쓰기
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}
 	}
 }

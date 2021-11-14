@@ -186,7 +186,9 @@ $(function(){
 				<td>${vo.pStock}</td>
 				<td>${vo.pDesc}</td>
 				<td>${vo.pCategory_name}</td>
-				<td><span class="btn-update" data-pNo="${vo.pNo}" onclick="location.href='${pageContext.request.contextPath}/product/update.do?pNo=${vo.pNo}';">수정</span> | <span class="btn-delete" data-pNo="${vo.pNo}">삭제</span></td>
+				<td><span class="btn-update" data-pNo="${vo.pNo}" onclick="location.href='${pageContext.request.contextPath}/product/update.do?pNo=${vo.pNo}';">수정</span> | 
+				<span class="btn-delete" data-pNo="${vo.pNo}">삭제</span>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
