@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+
 import com.util.MyServlet;
 import com.util.MyUtil;
 
@@ -52,6 +53,8 @@ public class MemberServlet extends MyServlet {
 			deleteMember(req, resp);
 		}
 	}
+	
+	
 	private void loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/member/login.jsp";
 		forward(req, resp, path);

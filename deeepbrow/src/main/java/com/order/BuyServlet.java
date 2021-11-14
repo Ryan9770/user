@@ -1,6 +1,8 @@
 package com.order;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,13 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
+
 import com.member.MemberDAO;
 import com.member.MemberDTO;
 import com.member.SessionInfo;
 import com.product.ProductDAO;
 import com.product.ProductDTO;
-import com.qna.QnaDAO;
 import com.util.MyServlet;
+import com.util.MyUtil;
 
 @WebServlet("/buy/*")
 public class BuyServlet extends MyServlet {
@@ -34,6 +38,10 @@ public class BuyServlet extends MyServlet {
 			buyMain(req, resp);
 		} else if(uri.indexOf("buy_ok.do") != -1) {
 			buySubmit(req, resp);
+		} else if(uri.indexOf("buyList.do") != -1) {
+			buyList(req, resp);
+		} else if(uri.indexOf("delete.do")!= -1) {
+			delete(req, resp);
 		}
 		
 	}
@@ -60,7 +68,6 @@ public class BuyServlet extends MyServlet {
 			
 			int pNum = Integer.parseInt(req.getParameter("pNo"));
 			ProductDTO dto = dao.readProduct(pNum);
-			// ProductDTO dto2 = dao.readProductImage(pNum);
 			MemberDTO dto2 = dao2.readMember(info.getUserId());
 			BuyDTO dto3 = dao3.readImage(pNum);
 			
@@ -145,6 +152,75 @@ public class BuyServlet extends MyServlet {
 		
 	}
 	
+	protected void buyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		BuyDAO dao = new BuyDAO();
+		MyUtil util = new MyUtil();
+		
+		String cp = req.getContextPath();
+		
+		try {
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if(page != null) {
+				current_page = Integer.parseInt(page);
+			}
+			
+			int dataCount = dao.dataCount();
+			
+			int rows = 5;
+			int total_page = util.pageCount(rows, dataCount);
+			if(current_page > total_page) {
+				current_page = total_page;
+			}
+			
+			int start = (current_page - 1) * rows + 1;
+			int end = current_page * rows;
+			
+			List<BuyDTO> list = dao.BuyList(start, end);
+			
+			
+			String listUrl = cp + "/buy/buyList.do";
+			String articleUrl = cp + "/buy/buyList.do?page="+current_page;
+			
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			req.setAttribute("list", list);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("articleUrl", articleUrl);
+			req.setAttribute("paging", paging);
+	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/buy/buyList.jsp");
+	}
+
+	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		BuyDAO dao = new BuyDAO();
+		
+		String state = "false";
+		try {
+			int orderNo = Integer.parseInt(req.getParameter("orderNo"));
+						
+				dao.deleteOrder(orderNo);
+				state = "true";
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
+		
+		
+	}
 	
 
 }

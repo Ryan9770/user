@@ -97,15 +97,19 @@ $(function() {
 	$(".Cartbtn").click(function(){
 		var pNo = "${dto.pNo}";
 		var quantity = $("#result").text(); 
-		var price = "${dto.pPrice}";
+		var calPrice = $(".price").text();
+		var pName = $("#pName").text();
+		
+		calPrice = calPrice.replaceAll(",","");
+		var price = quantity*calPrice;
+		
 		if(quantity == 0){
 			alert("상품 수량을 선택해주세요.");
 			return false;
 		}
-		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
-		
-		var url = "${pageContext.request.contextPath}"+query; // 장바구니로 보낼 주소 입력
-		
+		var query = "pNo="+pNo+"&quantity="+quantity+"&price="+price+"&pName="+pName;
+		// alert(query);
+		var url = "${pageContext.request.contextPath}/basket/basket_ok.do?"+query;
 		
 		location.href = url;
 	});
@@ -134,7 +138,7 @@ $(function() {
 						<table>
 							<tbody>
 								<tr>
-									<td><span class="prdName">상품명 : <b>${dto.pName}</b></span></td>
+									<td><span class="prdName">상품명 : <b id="pName">${dto.pName}</b></span></td>
 								</tr>
 								<tr>
 									<td><span class="prdPrice">가격 : <b class="price">

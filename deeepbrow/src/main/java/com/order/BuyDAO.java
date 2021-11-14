@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.product.ProductDTO;
 import com.util.DBConn;
@@ -103,6 +105,7 @@ public class BuyDAO {
 		return result;
 	}
 	
+	// 이미지 불러오기 메소드
 	public BuyDTO readImage(int pNum) {
 		BuyDTO dto = null;
 		PreparedStatement pstmt = null;
@@ -145,5 +148,136 @@ public class BuyDAO {
 		
 		
 		return dto;
+	}
+	
+	// 구매 리스트
+	public List<BuyDTO> BuyList(int start, int end){
+		List<BuyDTO> list = new ArrayList<BuyDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT * FROM ( ");
+			sb.append("		SELECT ROWNUM rnum, tb.* FROM ( ");
+			sb.append("			SELECT po.orderNo, order_date, whole_price, shipping_fee, pay_price, pay_date, po.mid ");
+			sb.append("			FROM Product_order po ");
+			sb.append("			JOIN member m ON po.mid = m.mid ");
+			sb.append("			LEFT OUTER JOIN (");
+			sb.append("				SELECT odNo, quantity, odPrice, pNo, orderNo");
+			sb.append("				FROM order_details");
+			sb.append("			) od ON po.orderNo = od.orderNo");
+			sb.append("			LEFT OUTER JOIN (");
+			sb.append("				SELECT orderNo, dsDate, ds_manage");
+			sb.append("			 	FROM delivery_status");
+			sb.append("			) ds ON po.orderNo = ds.orderNo ");
+			sb.append("			ORDER BY po.orderNo DESC ");
+			sb.append("		) tb WHERE ROWNUM <= ? ");
+			sb.append("	) WHERE rnum >= ? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setInt(1, end);
+			pstmt.setInt(2, start);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BuyDTO dto = new BuyDTO();
+				
+				dto.setOrderno(rs.getInt("orderNo"));
+				dto.setOrder_date(rs.getString("order_date"));
+				dto.setWhole_price(rs.getInt("whole_price"));
+				dto.setShipping_fee(rs.getInt("shipping_fee"));
+				dto.setPay_price(rs.getInt("pay_price"));
+				dto.setPay_date(rs.getString("pay_date"));
+				dto.setMid(rs.getString("mid"));
+				
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		
+		return list;
+	}
+		
+	// 데이터 카운트
+	public int dataCount() {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM Product_order";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next())
+				result = rs.getInt(1);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public int deleteOrder(int orderNo) throws SQLException{
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "DELETE FROM Product_order WHERE orderNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, orderNo);
+			
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return result;
 	}
 }

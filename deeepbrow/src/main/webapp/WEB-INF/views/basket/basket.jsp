@@ -1,13 +1,26 @@
+<%@page import="com.member.SessionInfo"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+	
+	request.setCharacterEncoding("utf-8");
+	
+	//로그인 체크
+	SessionInfo info = (SessionInfo) session.getAttribute("member");
+	if (info == null) {
+		response.sendRedirect("../member/login.do");
+		return;
+	}
+	
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<title>DeeepBrow</title>
+<title>deeepbrow</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <style type="text/css">
@@ -292,7 +305,7 @@ tbody td {
             <h3 class="title">혜택정보</h3>
 			<div class="description">
 				<div class="member ">
-					<p>{회원 이름 데이터}</p>
+					<p>${sessionScope.member.userId}님</p>
 				</div>
                 <ul class="mileage">
 					<li>적립금 : <fmt:formatNumber value="" pattern="#,###"/>  원</li>
@@ -337,43 +350,50 @@ tbody td {
                 	</tr>
                 </tfoot>
 			<tbody class="center">
-				<tr>
-					<td>
-						<input type="checkbox" id="" name="basket_product">
-					</td>
-                    <td class="thumbnail gClearLine">
-                    	<a href="">
-                    		<img src=""> <!-- 상품 사진 경로 -->
-                    	</a>
-                    </td>
-                    <td class="center gClearLine">
-                        <span class="name">
-                        	<a href="" class="productName"> 상품명 </a>
-                        </span>
-					</td>
-                    <td class="center">
-                        <div class="price">
-                        상품 가격
-						</div>
-                    </td>
-                    <td>
-						<span class="qty center">
-							<input id="quantity" name="quantity" size="1" value="1" type="text">
-							<a href="" onclick="" style="color: #fff;" class="up">▲</a><a href="" onclick="" style="color: #fff;" class="down">▼</a>
-						</span>
-                    </td>
-                    <td>
-                    	<div class="txtInfo">
-                    	{배송구분}
-                    	</div>
-                    </td>
-                    <td rowspan="1" class="">
-						{배송료}
-					</td>
-                    <td class="center">
-                   		{합계}
-                    </td>
-                </tr>
+				<c:forEach var="dto" items="${list}">
+					<tr>
+						<td>
+							<input type="checkbox" id="" name="basket_product">
+						</td>
+	                    <td class="thumbnail gClearLine">
+	                    	<a href="">
+	                    		<img src=""> <!-- 상품 사진 경로 -->
+	                    	</a>
+	                    </td>
+	                    <td class="center gClearLine">
+	                        <span class="name">
+	                        	<a href="" class="productName"> ${dto.pname } </a>
+	                        </span>
+						</td>
+	                    <td class="center">
+	                        <div class="price">
+	                        <fmt:formatNumber value="${dto.onePrice }" type="number"/>
+	                        원
+							</div>
+	                    </td>
+	                    <td>
+							<span class="qty center">
+								<input id="quantity" name="quantity" size="1" value="1" type="text">
+								<a href="" onclick="" style="color: #fff;" class="up">▲</a><a href="" onclick="" style="color: #fff;" class="down">▼</a>
+							</span>
+	                    </td>
+	                    <td>
+	                    	<div class="txtInfo">
+	                    	미정
+	                    	</div>
+	                    </td>
+	                    <td rowspan="1" class="">
+							무료배송
+						</td>
+	                    <td class="center">
+	                   		0원
+	                    </td>
+	                    <td>
+	                    	<fmt:formatNumber value="${dto.price }" type="number"/>
+	                        원
+	                    </td>
+	                </tr>
+	            </c:forEach>
 			</tbody>
 		</table>
 	</div>

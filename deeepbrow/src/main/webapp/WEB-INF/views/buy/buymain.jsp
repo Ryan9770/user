@@ -20,7 +20,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Insert title here</title>
+<title>deeepbrow</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/42044ce0be.js" crossorigin="anonymous"></script>
