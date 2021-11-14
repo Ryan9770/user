@@ -31,10 +31,14 @@ a:active, a:hover {
 	color: #F28011;
 }
 
-h1 {
-	margin: 10px;
-	font-weight: 700;
+.title-body {
+	padding: 50px 0; text-align: center;
 }
+
+.title-body .article-title {
+	font-size: 20px;
+}
+
 
 .box{
 	width: 700px;
@@ -42,10 +46,11 @@ h1 {
 }
 
 .table-stock {
-	width: 100%;
+	width: 80%;
+	margin: 0 auto;
 	border-collapse: collapse;
 	border-spacing: 0;
-	margin-bottom: 200px;
+	margin-bottom: 100px;
 }
 
 
@@ -75,6 +80,7 @@ h1 {
 
 .add{
 	color: #fff;
+	width: 23%;
 	float: left;
 }
 
@@ -159,6 +165,9 @@ $(function(){
 </header>
 <main>
 <div class="container">
+	<div class="title-body">
+		<span class="article-title">재고관리</span>
+	</div>
 	<table class="table-stock paginated">
 			<div><a class="add" href="${pageContext.request.contextPath}/product/write.do"><i class="fas fa-cart-plus"></i></a> </div>
 		<thead style="clear: both;">
@@ -166,8 +175,8 @@ $(function(){
 				<th width="100" class="stockclass">제품번호</th>
 				<th width="150" class="stockclass">제품명</th>
 				<th width="150" class="stockclass">제품등록일</th>
-				<th width="150" class="stockclass">제품가격</th>
-				<th width="150" class="stockclass">제품수량</th>
+				<th width="100" class="stockclass">제품가격</th>
+				<th width="100" class="stockclass">제품수량</th>
 				<th width="400" class="stockclass">제품설명</th>
 				<th width="100" class="stockclass">분류</th>
 				<th width="100" class="stockclass">변경</th>
