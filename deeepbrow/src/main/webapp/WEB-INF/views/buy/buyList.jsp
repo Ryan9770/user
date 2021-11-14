@@ -10,15 +10,14 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 <style type="text/css">
-* {
-	margin: 0; padding: 0;
-    box-sizing: border-box;
+.title-body {
+	padding: 50px 0; text-align: center;
 }
 
-body {
-	font-size: 14px;
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+.title-body .article-title {
+	font-size: 20px; cursor: pointer;
 }
 
 a {
@@ -31,10 +30,6 @@ a:active, a:hover {
 	color: #F28011;
 }
 
-h1 {
-	margin: 10px;
-	font-weight: 700;
-}
 
 .box{
 	width: 700px;
@@ -42,10 +37,13 @@ h1 {
 }
 
 .table-stock {
-	width: 100%;
-	border-collapse: collapse;
+	width: 80%;
+	margin: 0 auto;
 	border-spacing: 0;
-	margin-bottom: 200px;
+	border-collapse: collapse;
+	border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    margin-bottom: 50px;
 }
 
 
@@ -159,18 +157,20 @@ $(function(){
 </header>
 <main>
 <div class="container">
+	<div class="title-body">
+		<span class="article-title">${sessionScope.member.userName}님의 주문내역</span>
+	</div>
 	<table class="table-stock paginated">
 		<thead style="clear: both;">
-			<tr><td><h3>구매내역</h3></td></tr>
+			
 			<tr>
 				<th width="100" class="stockclass">주문 번호</th>
-				<th width="500" class="stockclass">주문 일자</th>
+				<th width="150" class="stockclass">주문 일자</th>
 				<th width="100" class="stockclass">주문 총금액</th>
-				<th width="150" class="stockclass">배송료</th>
+				<th width="50" class="stockclass">배송료</th>
 				<th width="100" class="stockclass">결제금액</th>
-				<th width="100" class="stockclass">거래 완료 일자</th>
-				<th width="100" class="stockclass">회원 아이디</th>
-				<th width="150" class="stockclass">주문취소</th>
+				<th width="150" class="stockclass">거래 완료 일자</th>
+				<th width="100" class="stockclass">주문취소</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -182,17 +182,16 @@ $(function(){
 				<td>${vo.shipping_fee}</td>
 				<td>${vo.pay_price}</td>
 				<td>${vo.pay_date}</td>
-				<td>${vo.mid}</td>
 				<td>
 					<span class="btn-delete" data-orderNo="${vo.orderno}">주문취소</span>
 				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
-		<div class="page-box">
-			${dataCount == 0 ? "구매내역이 없습니다.": paging}
-	</div>
 	</table>
+	<div class="page-box">
+		${dataCount == 0 ? "구매내역이 없습니다.": paging}
+	</div>
 </div>
 </main>
 <footer>
