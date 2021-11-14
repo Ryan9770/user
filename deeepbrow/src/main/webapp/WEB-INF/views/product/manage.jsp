@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>deeepbrow</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
@@ -159,21 +159,18 @@ $(function(){
 </header>
 <main>
 <div class="container">
-
 	<table class="table-stock paginated">
-		
-		<h1>재고관리</h1>
 			<div><a class="add" href="${pageContext.request.contextPath}/product/write.do"><i class="fas fa-cart-plus"></i></a> </div>
 		<thead style="clear: both;">
 			<tr>
 				<th width="100" class="stockclass">제품번호</th>
-				<th width="500" class="stockclass">제품명</th>
-				<th width="100" class="stockclass">제품등록일</th>
+				<th width="150" class="stockclass">제품명</th>
+				<th width="150" class="stockclass">제품등록일</th>
 				<th width="150" class="stockclass">제품가격</th>
-				<th width="100" class="stockclass">제품수량</th>
-				<th width="100" class="stockclass">제품설명</th>
+				<th width="150" class="stockclass">제품수량</th>
+				<th width="400" class="stockclass">제품설명</th>
 				<th width="100" class="stockclass">분류</th>
-				<th width="150" class="stockclass">변경</th>
+				<th width="100" class="stockclass">변경</th>
 			</tr>
 		</thead>
 		<tbody>
