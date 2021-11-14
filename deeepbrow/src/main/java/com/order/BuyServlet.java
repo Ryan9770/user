@@ -12,12 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+import com.basket.BasketDAO;
+import com.basket.BasketDTO;
 import com.member.MemberDAO;
 import com.member.MemberDTO;
 import com.member.SessionInfo;
 import com.product.ProductDAO;
 import com.product.ProductDTO;
-import com.util.FileManager;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
@@ -43,6 +44,8 @@ public class BuyServlet extends MyServlet {
 			buyList(req, resp);
 		} else if(uri.indexOf("delete.do")!= -1) {
 			delete(req, resp);
+		} else if(uri.indexOf("basketBuy.do")!= -1) {
+			basketBuy(req, resp);
 		}
 		
 	}
@@ -69,7 +72,6 @@ public class BuyServlet extends MyServlet {
 			
 			int pNum = Integer.parseInt(req.getParameter("pNo"));
 			ProductDTO dto = dao.readProduct(pNum);
-			// ProductDTO dto2 = dao.readProductImage(pNum);
 			MemberDTO dto2 = dao2.readMember(info.getUserId());
 			BuyDTO dto3 = dao3.readImage(pNum);
 			
@@ -92,6 +94,35 @@ public class BuyServlet extends MyServlet {
 		}
 		
 		forward(req, resp, "/WEB-INF/views/buy/buymain.jsp");
+
+	}
+	
+	protected void basketBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/buy/basketBuy.jsp";
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		BasketDAO dao = new BasketDAO();
+		MemberDAO dao2 = new MemberDAO();
+		
+		try {
+			
+			List<BasketDTO> list = dao.listBasket(info.getUserId());
+			MemberDTO dto2 = dao2.readMember(info.getUserId());
+			if(list == null) {
+				String m = "장바구니가 비어있습니다.";
+				req.setAttribute("m", m);
+				return;
+			}
+			req.setAttribute("list", list);
+			req.setAttribute("dto2", dto2);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, path);
 
 	}
 	
@@ -157,14 +188,11 @@ public class BuyServlet extends MyServlet {
 	protected void buyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		BuyDAO dao = new BuyDAO();
 		MyUtil util = new MyUtil();
-
 		
 		String cp = req.getContextPath();
 		
 		try {
 			String page = req.getParameter("page");
-			String mid = req.getParameter("mid");
-			
 			int current_page = 1;
 			if(page != null) {
 				current_page = Integer.parseInt(page);
@@ -181,7 +209,7 @@ public class BuyServlet extends MyServlet {
 			int start = (current_page - 1) * rows + 1;
 			int end = current_page * rows;
 			
-			List<BuyDTO> list = dao.BuyList( start, end,mid);
+			List<BuyDTO> list = dao.BuyList(start, end);
 			
 			
 			String listUrl = cp + "/buy/buyList.do";
@@ -201,7 +229,6 @@ public class BuyServlet extends MyServlet {
 		}
 		
 		forward(req, resp, "/WEB-INF/views/buy/buyList.jsp");
- 
 	}
 
 	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -227,4 +254,6 @@ public class BuyServlet extends MyServlet {
 		
 		
 	}
+	
+
 }

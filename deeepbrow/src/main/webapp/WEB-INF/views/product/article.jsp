@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>deeepbrow</title>
+<title>spring</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/article.css" type="text/css">
@@ -31,11 +31,6 @@
 	 margin-top: 10px;
 	 margin-bottom: 10px;
 	 margin-right: 15px;
-}
-
-.row_tr{
-	width : 100%;
-	height: 50px;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -93,12 +88,6 @@ $(function() {
 			alert("상품 수량을 선택해주세요.");
 			return false;
 		}
-
-		if(quantity > ${dto.pStock}){
-			alert("상품 수량을 초과 선택하였습니다. 다시 입력 바랍니다.");
-			return false;
-		}
-		
 		var query = "pNo="+pNo+"&quantity="+quantity+"&price="+price;
 		var url = "${pageContext.request.contextPath}/buy/buymain.do?"+query;
 		
@@ -108,21 +97,19 @@ $(function() {
 	$(".Cartbtn").click(function(){
 		var pNo = "${dto.pNo}";
 		var quantity = $("#result").text(); 
-		var price = "${dto.pPrice}";
+		var calPrice = $(".price").text();
+		var pName = $("#pName").text();
+		
+		calPrice = calPrice.replaceAll(",","");
+		var price = quantity*calPrice;
+		
 		if(quantity == 0){
 			alert("상품 수량을 선택해주세요.");
 			return false;
 		}
-
-		if(quantity > ${dto.pStock}){
-			alert("상품 수량을 초과 선택하였습니다. 다시 입력 바랍니다.");
-			return false;
-		}
-
-		var query = "pNo="+pNo; //+"&quantity="+quantity+"&price="+price;
-		
-		var url = "${pageContext.request.contextPath}"+query; // 장바구니로 보낼 주소 입력
-		
+		var query = "pNo="+pNo+"&quantity="+quantity+"&price="+price+"&pName="+pName;
+		// alert(query);
+		var url = "${pageContext.request.contextPath}/basket/basket_ok.do?"+query;
 		
 		location.href = url;
 	});
@@ -151,7 +138,7 @@ $(function() {
 						<table>
 							<tbody>
 								<tr>
-									<td><span class="prdName">상품명 : <b>${dto.pName}</b></span></td>
+									<td><span class="prdName">상품명 : <b id="pName">${dto.pName}</b></span></td>
 								</tr>
 								<tr>
 									<td><span class="prdPrice">가격 : <b class="price">
@@ -188,6 +175,11 @@ $(function() {
 				</div>
 			</div>
 			<div style="position: static; width: 633.188px; height: 346px; display: inline-block; vertical-align: top; float: none;"></div>
+		</div>
+		
+		<div class="review-box">
+			<div class="review-top"><h3 style="float: left;">REVIEW</h3><button type="button" class="btn btnWrite" onclick="" style="float: right;">WRITE</button></div>
+			<div class="review-board">리뷰가 없습니다</div>
 		</div>
 	</div>
 </div>

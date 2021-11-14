@@ -102,5 +102,69 @@ public class BasketDAO {
 
 		return list;
 	}
+	
+	public int deleteBasket(int pNum) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			
+			sql = "DELETE FROM cart WHERE pnum = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, pNum);
+			
+			result = pstmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		
+		return result;
+		
+	}
+	
+	public int deleteAll(String userId) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			
+			sql = "DELETE FROM cart where userId = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userId);
+			
+			result = pstmt.executeUpdate();
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		
+		return result;
+		
+	}
 
 }

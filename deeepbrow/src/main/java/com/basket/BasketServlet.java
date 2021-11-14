@@ -36,6 +36,10 @@ public class BasketServlet extends MyServlet {
 			basket(req, resp);
 		} else if(uri.indexOf("basket_ok.do") != -1) {
 			basketSubmit(req, resp);
+		} else if(uri.indexOf("delete_ok.do") != -1) {
+			delete(req, resp);
+		} else if(uri.indexOf("basketDeleteAll.do") != -1) {
+			deleteAll(req, resp);
 		}
 	}
 	
@@ -96,6 +100,41 @@ public class BasketServlet extends MyServlet {
 		}
 		
 		forward(req, resp, "/WEB-INF/views/basket/basket_ok.jsp");
+		
+	}
+	
+	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		BasketDAO dao = new BasketDAO();
+		
+		try {
+			
+			int pNo = Integer.parseInt(req.getParameter("pNo"));
+						
+				dao.deleteBasket(pNo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/basket/basket.jsp");
+		
+	}
+	
+	private void deleteAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		BasketDAO dao = new BasketDAO();
+		
+		try {
+			
+			dao.deleteAll(info.getUserId());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/basket/basket.jsp");
 		
 	}
 

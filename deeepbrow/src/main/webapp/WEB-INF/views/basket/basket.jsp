@@ -23,6 +23,7 @@
 <title>deeepbrow</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 
 *{	padding: 0; margin: 0; box-sizing: border-box;}
@@ -291,7 +292,74 @@ tbody td {
     border-radius: 0px 0 0 0px;
 }
 
+.productimg {
+	max-width: 92px;
+}
+
 </style>
+<script type="text/javascript">
+
+$(function() {
+	totalPrice();
+	
+	$("#chkAll").click(function(){ // 상품 리스트 체크박스 전부 체크
+		$("input[name=basket_product]").prop("checked", $(this).is(":checked"));
+	});
+	
+	$(".basketDelete").click(function(){ // 상품들 체크 박스로 삭제
+		var cnt = $("input[name=basket_product]:checked").length;
+		if(cnt == 0) {
+			alert("삭제할 상품 목록을 선택 해주세요");
+			return false;
+		}
+		
+		
+		$("#basket_product").parent().parent().remove(); // 장바구니 리스트 하나 삭제
+		
+	});
+	
+	$(".orderAll").click(function(){
+		var pNo = "${dto.pNum}";
+		var quantity = "${dto.quantity}";
+		var onePrice = "${dto.onePrice}";
+		var price = "${dto.price}";
+		
+		var query = "pNo="+pNo+"&quantity="+quantity+"&price="+price+"&onePrice="+onePrice;
+		var url = "${pageContext.request.contextPath}/buy/basketBuy.do";
+		
+		location.href = url;
+	});
+	
+	$("#clearBasket").click(function(){
+		
+		var url = "${pageContext.request.contextPath}/basket/basketDeleteAll.do";
+		
+		location.href = url;
+	});
+	
+});
+
+function deleteAll() {
+	
+	var f = document.basketForm;
+	
+	f.action = "${pageContext.request.contextPath}/basket/basketAll.do";
+	f.submit();
+	return;
+}
+
+function totalPrice() {
+	var total = 0;
+	$("div .amt").each(function(){
+		total += parseInt($(this).attr("data-price"));
+		
+	});
+	
+	$(".totalPrice").text(total + "원");
+}
+
+
+</script>
 </head>
 <body>
 
@@ -300,6 +368,7 @@ tbody td {
 </header>
 <div class="container">
 <div class="basket">
+<form action="" method="post" name="basketForm">
 	<div class="typeMember">
 		<div class="information">
             <h3 class="title">혜택정보</h3>
@@ -328,36 +397,26 @@ tbody td {
 			</colgroup>
 			<thead>
 				<tr>
-					<th scope="col"><input type="checkbox" onclick=""></th>
+					<th scope="col"><input id="chkAll" type="checkbox" onclick=""></th>
                     <th scope="col">이미지</th>
                     <th scope="col">상품정보</th>
                     <th scope="col">판매가</th>
-                    <th scope="col">수량</th>
+                    <th scope="col" id="test">수량</th>
                     <th scope="col" class="mileage">적립금</th>
                     <th scope="col">배송구분</th>
                     <th scope="col">배송비</th>
                     <th scope="col">합계</th> 
                 </tr>
-			</thead>
-				<tfoot class="right">
-					<tr>
-						<td colspan="10">
-							<span class="gLeft"></span> 
-							상품구매금액 : <fmt:formatNumber value="" pattern="#,###"/>
-							배송비 : <fmt:formatNumber value="" pattern="#,###"/>				 
-							= 합계 : <span class="txt18"> <fmt:formatNumber value="" pattern="#,###"/> </span>
-						</td>
-                	</tr>
-                </tfoot>
+
 			<tbody class="center">
 				<c:forEach var="dto" items="${list}">
 					<tr>
 						<td>
-							<input type="checkbox" id="" name="basket_product">
+							<input type="checkbox" id="basket_product" name="basket_product">
 						</td>
 	                    <td class="thumbnail gClearLine">
 	                    	<a href="">
-	                    		<img src=""> <!-- 상품 사진 경로 -->
+	                    		<img class="productimg" src="${pageContext.request.contextPath}/uploads/product/${dto.img}"> <!-- 상품 사진 경로 -->
 	                    	</a>
 	                    </td>
 	                    <td class="center gClearLine">
@@ -373,7 +432,7 @@ tbody td {
 	                    </td>
 	                    <td>
 							<span class="qty center">
-								<input id="quantity" name="quantity" size="1" value="1" type="text">
+								<input style="color: black;" id="quantity" name="quantity" size="1" value="${dto.quantity }" type="text">
 								<a href="" onclick="" style="color: #fff;" class="up">▲</a><a href="" onclick="" style="color: #fff;" class="down">▼</a>
 							</span>
 	                    </td>
@@ -389,7 +448,9 @@ tbody td {
 	                   		0원
 	                    </td>
 	                    <td>
-	                    	<fmt:formatNumber value="${dto.price }" type="number"/>
+	                    	<div class="amt" data-price="${dto.price }">
+	                    		<fmt:formatNumber value="${dto.price }" type="number"/>
+	                    	</div>
 	                        원
 	                    </td>
 	                </tr>
@@ -402,7 +463,7 @@ tbody td {
             <a href="#" onclick="" class="basketDelete">체크 상품을 삭제</a>
         </span>
 		<span class="gRight">
-			<a href="#" onclick="" class="basketClear">장바구니 비우기</a>
+			<button id="clearBasket" type="button" style="width: 150px; height: 40px; font-weight: bold;">장바구니 비우기</button>
         </span>
 	</div>
 	<div class="total">
@@ -421,19 +482,19 @@ tbody td {
 			</thead>
 			<tbody class="center">
 				<tr>
-					<td>
+					<td style="text-align: center;">
 						<div class="box txt16">
-							<fmt:formatNumber value="" pattern="#,###"/> 
+							<span class="txt23 totalPrice"></span>
 						</div>
 					</td>
-					<td>
+					<td style="text-align: center;">
                  		<div class="shippingfee">
-							<span class="txt23"><fmt:formatNumber value="" pattern="#,###"/></span> <!-- 배송비 -->
+							<span class="txt23"><fmt:formatNumber value="0" pattern="#,###"/></span> <!-- 배송비 -->
 						</div>
 					</td>
-					<td>
+					<td style="text-align: center;">
 						<div>
-							<span class="txt23"><fmt:formatNumber value="" pattern="#,###"/></span>
+							<span class="txt23 totalPrice"></span>
 						</div>
 					</td>
 				</tr>
@@ -442,12 +503,10 @@ tbody td {
 	</div>
 	<div class="button justify orderButton" style="width: 200px; margin: 0 auto;">
 		<div class="basket_BuyAll" style="margin: 5px;">
-			<a href="#" onclick="" class="">전체상품주문</a>
-		</div>
-		<div class="basket_Buyselect" style="margin: 5px;">
-			<a href="#" onclick="" class="">선택상품주문</a>
+			<button type="button" class="orderAll" style="width: 100px; height: 30px; font-weight: bold;">전체상품주문</button>
 		</div>
 	</div>
+	</form>
 </div>
 </div>
 

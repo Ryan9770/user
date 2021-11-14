@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.basket.BasketDTO;
+import com.product.ProductDTO;
 import com.util.DBConn;
 
 public class BuyDAO {
@@ -104,6 +106,32 @@ public class BuyDAO {
 		return result;
 	}
 	
+	public int insertBasket(List<BasketDTO> list, String userId) throws SQLException {
+		
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql;
+		int seq;
+		
+		try {
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+		
+		return result;
+	}
+	
+	
+	
+	// 이미지 불러오기 메소드
 	public BuyDTO readImage(int pNum) {
 		BuyDTO dto = null;
 		PreparedStatement pstmt = null;
@@ -149,7 +177,7 @@ public class BuyDAO {
 	}
 	
 	// 구매 리스트
-	public List<BuyDTO> BuyList(int start, int end, String mid){
+	public List<BuyDTO> BuyList(int start, int end){
 		List<BuyDTO> list = new ArrayList<BuyDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -169,15 +197,14 @@ public class BuyDAO {
 			sb.append("				SELECT orderNo, dsDate, ds_manage");
 			sb.append("			 	FROM delivery_status");
 			sb.append("			) ds ON po.orderNo = ds.orderNo ");
-			sb.append("			WHERE po.mid = ? ");
+			sb.append("			ORDER BY po.orderNo DESC ");
 			sb.append("		) tb WHERE ROWNUM <= ? ");
 			sb.append("	) WHERE rnum >= ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setString(1, mid);
-			pstmt.setInt(2, end);
-			pstmt.setInt(3, start);
+			pstmt.setInt(1, end);
+			pstmt.setInt(2, start);
 			
 			rs = pstmt.executeQuery();
 			
@@ -215,121 +242,68 @@ public class BuyDAO {
 		
 		return list;
 	}
-	
+		
 	// 데이터 카운트
-		public int dataCount() {
-			int result = 0;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			String sql;
+	public int dataCount() {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
 
-			try {
-				sql = "SELECT NVL(COUNT(*), 0) FROM Product_order";
-				pstmt = conn.prepareStatement(sql);
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM Product_order";
+			pstmt = conn.prepareStatement(sql);
 
-				rs = pstmt.executeQuery();
-				if (rs.next())
-					result = rs.getInt(1);
+			rs = pstmt.executeQuery();
+			if (rs.next())
+				result = rs.getInt(1);
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException e) {
-					}
-				}
-
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-					} catch (SQLException e) {
-					}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
 				}
 			}
 
-			return result;
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public int deleteOrder(int orderNo) throws SQLException{
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "DELETE FROM Product_order WHERE orderNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, orderNo);
+			
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
 		}
 		
-		public BuyDTO readBuy(int orderNo) {
-			BuyDTO dto = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			String sql;
-			
-			try {
-				sql = "SELECT po.orderNo, order_date, whole_price, shipping_fee, pay_price, pay_date, po.mid, pNo"
-						+ " FROM Product_order po"
-						+ " JOIN member m ON po.mid = m.mid"
-						+ " JOIN order_details od ON po.orderNo = od.orderNo"
-						+ " WHERE po.orderNo = ?";
-				
-				pstmt = conn.prepareStatement(sql);
-				
-				pstmt.setInt(1, orderNo);
-				
-				rs = pstmt.executeQuery();
-				
-				if(rs.next()) {
-					dto = new BuyDTO();
-					dto.setOrderno(rs.getInt("orderNo"));
-					dto.setOrder_date(rs.getString("order_date"));
-					dto.setWhole_price(rs.getInt("whole_price"));
-					dto.setShipping_fee(rs.getInt("shipping_fee"));
-					dto.setPay_price(rs.getInt("pay_price"));
-					dto.setMid(rs.getString("mid"));
-					dto.setPno(rs.getInt("pNo"));
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (Exception e2) {
-					}
-				}
-
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-					} catch (Exception e2) {
-					}
-				}
-			}
-			
-			return dto;
-		}
-		
-	
-		public int deleteOrder(int orderNo) throws SQLException{
-			int result = 0;
-			PreparedStatement pstmt = null;
-			String sql;
-			
-			try {
-				sql = "DELETE FROM Product_order WHERE orderNo = ? ";
-				
-				pstmt = conn.prepareStatement(sql);
-				
-				pstmt.setInt(1, orderNo);
-				
-				result = pstmt.executeUpdate();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}finally {
-				if(pstmt!=null) {
-					try {
-						pstmt.close();
-					} catch (Exception e2) {
-					}
-				}
-			}
-			
-			return result;
-		}
-	
+		return result;
+	}
 }

@@ -59,7 +59,7 @@ function searchItem() {
 				<c:if test="${sessionScope.member.userId != 'admin'}">
 				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a>
 				&nbsp;/&nbsp;
-				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">장바구니</a>
+				<a href="${pageContext.request.contextPath}/basket/basket.do">장바구니</a>
 				<br><br>
 				<a href="${pageContext.request.contextPath}/buy/buyList.do?mid=${sessionScope.member.userId}">주문내역</a>
 				</c:if>
