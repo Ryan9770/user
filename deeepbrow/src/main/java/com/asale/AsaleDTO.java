@@ -4,8 +4,8 @@ public class AsaleDTO {
 	private int listNum;
 	private int pNo;
 	private String pName;
-	private String filename;
 	private int pPrice;
+	private int quantity;
 	private int pCount;
 	
 	public int getListNum() {
@@ -26,17 +26,17 @@ public class AsaleDTO {
 	public void setpName(String pName) {
 		this.pName = pName;
 	}
-	public String getFilename() {
-		return filename;
-	}
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
 	public int getpPrice() {
 		return pPrice;
 	}
 	public void setpPrice(int pPrice) {
 		this.pPrice = pPrice;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	public int getpCount() {
 		return pCount;
@@ -44,9 +44,6 @@ public class AsaleDTO {
 	public void setpCount(int pCount) {
 		this.pCount = pCount;
 	}
-	public int getpSum() {
-		return pPrice*pCount;
-	}
 	
-	
+
 }

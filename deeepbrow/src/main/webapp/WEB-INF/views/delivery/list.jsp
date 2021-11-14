@@ -151,7 +151,7 @@ function showDetails(orderNo) {
 					<td style="text-decoration:underline; color: purple;"><a href="javascript:showDetails('${dto.orderNo}');">${dto.orderNo}</a></td>
 					<td>${dto.order_date}</td>
 					<td>${dto.pay_date}</td>
-					<td>${dto.pay_price}원</td>
+					<td><fmt:formatNumber value="${dto.pay_price}" pattern="#,###"/>원</td>
 					<td>${dto.mId}</td>
 					<td>${dto.dName}</td>
 					<td>${dto.dTel}</td>

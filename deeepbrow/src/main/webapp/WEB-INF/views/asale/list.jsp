@@ -52,31 +52,24 @@
 			<tr>
 				<td>제품 번호</td>
 				<td>제품 이름</td>
-				<td>제품 이미지</td>
 				<td>제품 가격</td>
 				<td>팔린 갯수</td>
 				<td>총합계</td>
 			</tr>
-			<tr>
-				<td>1</td>
-				<td>ㅇㅇㅇ</td>
-				<td>사진</td>
-				<td>10,000</td>
-				<td>4</td>
-				<td>40,000 원</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>ㅇㅇㅇ</td>
-				<td>사진</td>
-				<td>10,000</td>
-				<td>4</td>
-				<td>40,000 원</td>
-			</tr>
-			
+			<c:set var = "sum" value = "0"/>
+			<c:forEach var="dto" items="${list}">
+				<tr>
+					<td>${dto.pNo}</td>
+					<td>${dto.pName}</td>
+					<td><fmt:formatNumber value="${dto.pPrice}" pattern="#,###"/>원</td>
+					<td>${dto.pCount}</td>
+					<td><fmt:formatNumber value="${dto.pPrice * dto.pCount}" pattern="#,###"/>원</td>
+				</tr>
+				<c:set var="sum" value="${sum + dto.pPrice * dto.pCount}"/>
+			</c:forEach>
 			<tr>
 				<td>총 매출액</td>
-				<td colspan="4">----원</td>
+				<td colspan="4"><c:out value="${sum}"/>원</td>
 			</tr>
 		</table>
 	</div>

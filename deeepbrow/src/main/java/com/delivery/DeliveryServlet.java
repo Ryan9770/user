@@ -84,6 +84,7 @@ public class DeliveryServlet extends MyServlet {
 		
 		
 		try {
+			
 			int orderNo = Integer.parseInt(req.getParameter("orderNo"));
 			dao.cancelOrder(orderNo);
 		} catch (Exception e) {

@@ -113,8 +113,27 @@ i{
 			</tr>
 			
 			<tr>
+				<td class="table-column">상품번호</td>
+				<td class="table-value">${dto.pNo}</td>
+			</tr>
+			
+			<tr>
+				<td class="table-column">상품가격</td>
+				<td class="table-value">
+					<fmt:formatNumber value="${dto.odPrice}" pattern="#,###"/>원
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="table-column">주문수량</td>
+				<td class="table-value">${dto.quantity}개</td>
+			</tr>
+			
+			<tr>
 				<td class="table-column">결제금액</td>
-				<td class="table-value">${dto.pay_price}원</td>
+				<td class="table-value">
+					<fmt:formatNumber value="${dto.pay_price}" pattern="#,###"/>원
+				</td>
 			</tr>
 			
 			<tr>

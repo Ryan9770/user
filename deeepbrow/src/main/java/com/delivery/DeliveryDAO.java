@@ -168,10 +168,11 @@ public class DeliveryDAO {
 		
 		try {
 			sql = "SELECT po.orderNo, po.order_date, po.pay_date, po.pay_price, po.mId, "
-					+ "dName, dTel, dZipCode, dAddr1, dAddr2, del_memo, delNo, ds_manage "
+					+ "dName, dTel, dZipCode, dAddr1, dAddr2, del_memo, delNo, ds_manage, pNo, odPrice, quantity "
 					+ "FROM delivery d "
 					+ "JOIN product_order po ON d.orderNo = po.orderNo "
 					+ "LEFT OUTER JOIN delivery_status ds ON d.orderNo = ds.orderNo "
+					+ "JOIN order_details od ON d.orderNo = od.orderNo "
 					+ "WHERE po.orderNo = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -196,6 +197,9 @@ public class DeliveryDAO {
 				dto.setDel_memo(rs.getString("del_memo"));
 				dto.setDelNo(rs.getString("delNo"));
 				dto.setDs_manage(rs.getString("ds_manage"));
+				dto.setpNo(rs.getInt("pNo"));
+				dto.setOdPrice(rs.getInt("odPrice"));
+				dto.setQuantity(rs.getInt("quantity"));
 			}
 					
 		} catch (SQLException e) {

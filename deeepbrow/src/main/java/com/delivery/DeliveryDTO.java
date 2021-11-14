@@ -14,6 +14,9 @@ public class DeliveryDTO {
 	private String dAddr2;
 	private String dZipCode;
 	private String ds_manage;
+	private int pNo;
+	private int quantity;
+	private int odPrice;
 	
 	public int getOrderNo() {
 		return orderNo;
@@ -92,6 +95,24 @@ public class DeliveryDTO {
 	}
 	public void setDs_manage(String ds_manage) {
 		this.ds_manage = ds_manage;
+	}
+	public int getpNo() {
+		return pNo;
+	}
+	public void setpNo(int pNo) {
+		this.pNo = pNo;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public int getOdPrice() {
+		return odPrice;
+	}
+	public void setOdPrice(int odPrice) {
+		this.odPrice = odPrice;
 	}
 	
 	
