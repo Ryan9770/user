@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <script src="https://kit.fontawesome.com/42044ce0be.js" crossorigin="anonymous"></script>
@@ -57,7 +58,9 @@ function searchItem() {
 				<br><br>
 				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a>
 				&nbsp;/&nbsp;
-				<a href="${pageContext.request.contextPath}/basket/basket.do">장바구니</a>
+				<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">장바구니</a>
+				<br><br>
+				<a href="${pageContext.request.contextPath}/buy/buyList.do?mid=${sessionScope.member.userId}">주문내역</a>
 		</c:if>
 	</div>
 	<div class="menu">
@@ -89,7 +92,6 @@ function searchItem() {
 				<li><a href="${pageContext.request.contextPath}/delivery/list.do">주문관리</a></li>
 			</ul>
 		</c:if>
-		
 	</div>
 </div>
 

@@ -17,6 +17,7 @@ import com.member.MemberDTO;
 import com.member.SessionInfo;
 import com.product.ProductDAO;
 import com.product.ProductDTO;
+import com.util.FileManager;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
@@ -68,6 +69,7 @@ public class BuyServlet extends MyServlet {
 			
 			int pNum = Integer.parseInt(req.getParameter("pNo"));
 			ProductDTO dto = dao.readProduct(pNum);
+			// ProductDTO dto2 = dao.readProductImage(pNum);
 			MemberDTO dto2 = dao2.readMember(info.getUserId());
 			BuyDTO dto3 = dao3.readImage(pNum);
 			
@@ -155,11 +157,14 @@ public class BuyServlet extends MyServlet {
 	protected void buyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		BuyDAO dao = new BuyDAO();
 		MyUtil util = new MyUtil();
+
 		
 		String cp = req.getContextPath();
 		
 		try {
 			String page = req.getParameter("page");
+			String mid = req.getParameter("mid");
+			
 			int current_page = 1;
 			if(page != null) {
 				current_page = Integer.parseInt(page);
@@ -176,7 +181,7 @@ public class BuyServlet extends MyServlet {
 			int start = (current_page - 1) * rows + 1;
 			int end = current_page * rows;
 			
-			List<BuyDTO> list = dao.BuyList(start, end);
+			List<BuyDTO> list = dao.BuyList( start, end,mid);
 			
 			
 			String listUrl = cp + "/buy/buyList.do";
@@ -196,6 +201,7 @@ public class BuyServlet extends MyServlet {
 		}
 		
 		forward(req, resp, "/WEB-INF/views/buy/buyList.jsp");
+ 
 	}
 
 	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -221,6 +227,4 @@ public class BuyServlet extends MyServlet {
 		
 		
 	}
-	
-
 }
