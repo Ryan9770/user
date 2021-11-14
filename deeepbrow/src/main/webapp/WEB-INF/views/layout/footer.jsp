@@ -3,7 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<a class="goTop" href="#"><img src="${pageContext.request.contextPath}/resource/images/up.png" style="width: 30px;"></a>
+<script>
+	$(document).ready(function(){
+		$('.goTop').click(function(){
+	        $('html').animate({scrollTop : 0}, 300);
+		});
+	});
+</script>
+
+<a class="goTop"><img src="${pageContext.request.contextPath}/resource/images/up.png" style="width: 30px;"></a>
 <div class="footerdiv">
 	<div class="footers">
 		CS 전용 카카오톡 채널 @딥브로우

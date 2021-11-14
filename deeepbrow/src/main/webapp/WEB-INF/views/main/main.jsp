@@ -18,7 +18,7 @@
 
 .mainPhoto {
 	width: 100%;
-	height: 500px;
+	height: 800px;
 	background-image: url('${pageContext.request.contextPath}/resource/images/main.jpg');
 	background-repeat : no-repeat;
     background-size : cover;
@@ -26,7 +26,7 @@
 
 .grid {
 	width: 450px;
-	height: 350px;
+	height: 610px;
 	
 	display: inline-block;
 	margin: 50px 20px;
@@ -36,8 +36,13 @@
 	width: 100%;
 	height: 100%;
 }
-
+.maintxt{
+	padding-top: 25px;
+	font-size: 20px;
+	font-style: italic;
+}
 </style>
+
 </head>
 <body>
 
@@ -51,23 +56,24 @@
     <div class="mainPhoto">
 		<a href="#"></a>
 	</div>
-	
+	<div style="padding-top:40px;" class="mdpick">
+		<a class="maintxt">MD's PICK <i class="fas fa-caret-down"></i></a>
+	</div>
 	<div class="maingrid">
 		<div class="grid">
-			<a href="#">
-				<img class="img" alt="grid1" src="${pageContext.request.contextPath}/resource/images/main.jpg">
+			<a href="${pageContext.request.contextPath}/product/article.do?pNo=31">
+				<img class="img" src="${pageContext.request.contextPath}/uploads/product/2021111218471218554859147300.jpg">
+			</a>
+		</div>
+		<div class="grid">
+			<a href="${pageContext.request.contextPath}/product/article.do?pNo=29">
+				<img class="img" src="${pageContext.request.contextPath}/uploads/product/2021111217502615146742060100.jpg">
 			</a>
 		</div>
 		
 		<div class="grid">
-			<a href="#">
-				<img class="img" alt="grid1" src="${pageContext.request.contextPath}/resource/images/main.jpg">
-			</a>
-		</div>
-		
-		<div class="grid">
-			<a href="#">
-				<img class="img" alt="grid1" src="${pageContext.request.contextPath}/resource/images/main.jpg">
+			<a href="${pageContext.request.contextPath}/product/article.do?pNo=38">
+				<img class="img" src="${pageContext.request.contextPath}/uploads/product/2021111219003119353784234800.jpg">
 			</a>
 		</div>
 	</div>
@@ -79,4 +85,12 @@
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 </footer>
 </body>
+<script>
+	$(document).ready(function(){
+		$('.maintxt').click(function(){
+			var offset = $('.maingrid').offset();
+	        $('html').animate({scrollTop : offset.top}, 300);
+		});
+	});
+</script>
 </html>
