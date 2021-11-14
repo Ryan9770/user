@@ -94,25 +94,25 @@ function sendOk() {
 	<form name="noticeForm" method="post">
 		<table class="table table-list">
 			<tr>
-					<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
-					<td> 
-						<input type="text" name="nSubject" maxlength="100" class="boxTF" value="${dto.nSubject}">
-					</td>
-				</tr>
+				<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+				<td> 
+					<input type="text" name="nSubject" maxlength="100" class="boxTF" value="${dto.nSubject}">
+				</td>
+			</tr>
 
-				<tr> 
-					<td>작성자</td>
-					<td> 
-						<p>${sessionScope.member.userName}</p>
-					</td>
-				</tr>
-				
-				<tr> 
-					<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
-					<td> 
-						<textarea name="nContent" class="boxTA" style="height: 200px;">${dto.nContent}</textarea>
-					</td>
-				</tr>
+			<tr> 
+				<td>작성자</td>
+				<td> 
+					<p>${sessionScope.member.userName}</p>
+				</td>
+			</tr>
+			
+			<tr> 
+				<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+				<td> 
+					<textarea name="nContent" class="boxTA" style="height: 200px;">${dto.nContent}</textarea>
+				</td>
+			</tr>
 		</table>
 		
 		<table class="table">

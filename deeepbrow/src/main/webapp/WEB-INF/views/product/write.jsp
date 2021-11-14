@@ -11,6 +11,14 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
 <style type="text/css">
+.title-body {
+	padding: 50px 0; text-align: center;
+}
+
+.title-body .article-title {
+	font-size: 20px;
+}
+
 .table-form td {
 	padding: 7px 0;
 }
@@ -31,25 +39,26 @@
 
 .table-form .selectField{
 	text-align: center;
-	width: 100px;;
+	width: 100px;
 } 
 
 .table-form input[type=text], .table-form input[type=file], .table-form textarea{
 	width: 100%;
 }
 
-.table button{
-	width: 100px;
-	height: 50px;
-	background: none;
-	color: #fff;	
+.btn{
 	border: none;
+    background: white;
+    width: 80px;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 0 10px;
 }
-
-.table button:hover{
-	cursor: pointer;
-	border : 
-	color: 
+.btn:hover {
+	background-color: #e6e6e6;
+	border-color: #adadad;
+	color:#333;
 }
 
 .img-box {
@@ -141,6 +150,9 @@ function deleteFile(pNo) {
 
 <main>
 	<div class="container" align="center">
+	<div class="title-body">
+		<span class="article-title">재고관리</span>
+	</div>
 	<form name="addForm" method="post" enctype="multipart/form-data">
 		<table class="table table-border table-form">
 			<tr>
