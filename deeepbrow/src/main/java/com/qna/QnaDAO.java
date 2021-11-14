@@ -496,7 +496,7 @@ public class QnaDAO {
 		String sql;
 
 		try {
-			sql = "UPDATE bbs SET qSubject=?, qContent=?, qCategory=?, pNo=? WHERE qNo=? AND mId=?";
+			sql = "UPDATE qna SET qSubject=?, qContent=?, qCategory=?, pNo=? WHERE qNo=? AND mId=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getqSubject());
