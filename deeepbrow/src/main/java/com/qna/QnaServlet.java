@@ -302,6 +302,7 @@ public class QnaServlet extends MyUploadServlet {
 			dto.setqContent(req.getParameter("qContent"));
 			dto.setqCategory(req.getParameter("qCategory"));
 			dto.setpNo(Integer.parseInt(req.getParameter("pNo")));
+			dto.setqNo(Integer.parseInt(req.getParameter("qNo")));
 			
 			dao.updateQna(dto);
 			
