@@ -34,6 +34,15 @@
 	border: 1px solid #d7d5d5;
 }
 
+.container123 {
+	clear:both;
+
+	width: 1500px;
+	margin-left: 290px;
+	margin-top: 50px;
+	
+}
+
 .infomation{
 	display: table;
     table-layout: fixed;
@@ -296,6 +305,20 @@ tbody td {
 	max-width: 92px;
 }
 
+.content {
+	clear: both;
+	width: 80%;
+	margin: auto;
+}
+
+.title-body {
+	padding: 50px 0; text-align: center;
+}
+
+.title-body .article-title {
+	font-size: 20px;
+}
+
 </style>
 <script type="text/javascript">
 
@@ -366,9 +389,13 @@ function totalPrice() {
 <header>
     <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 </header>
-<div class="container">
+<div class="container123">
+<div class="content">
 <div class="basket">
 <form action="" method="post" name="basketForm">
+	<div class="title-body">
+		<span class="article-title">장바구니</span>
+	</div>
 	<div class="typeMember">
 		<div class="information">
             <h3 class="title">혜택정보</h3>
@@ -383,7 +410,7 @@ function totalPrice() {
 		</div>
 	</div>
 	<div class="orderListArea typeList gBorder table">
-        <table border="1" class="" style="width:1500px; ">
+        <table border="1" class="" style="width: 100%; ">
 			<colgroup>
 				<col style="width:27px">
 				<col style="width:92px">
@@ -467,13 +494,13 @@ function totalPrice() {
         </span>
 	</div>
 	<div class="total">
-		<table border="1">
+		<table border="1" style="width: 100%;">
 			<colgroup>
 				<col style="width:25%;">
 				<col style="width:21%;">
 				<col style="width:auto;">
 			</colgroup>
-			<thead>
+			<thead >
 				<tr>
 					<th scope="col">총 상품금액</th>
 					<th scope="col">총 배송비</th>
@@ -507,6 +534,7 @@ function totalPrice() {
 		</div>
 	</div>
 	</form>
+</div>
 </div>
 </div>
 

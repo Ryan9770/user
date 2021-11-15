@@ -188,7 +188,7 @@ public class BuyServlet extends MyServlet {
 	}
 	
 	protected void basketSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 결제 완료
+		// 장바구니에서 결제 완료
 		BuyDAO dao = new BuyDAO();
 		BuyDTO dto = new BuyDTO();
 		
