@@ -32,6 +32,12 @@
 	 margin-bottom: 10px;
 	 margin-right: 15px;
 }
+
+.row_tr{
+	width : 100%;
+	height: 50px;
+}
+
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
@@ -177,10 +183,6 @@ $(function() {
 			<div style="position: static; width: 633.188px; height: 346px; display: inline-block; vertical-align: top; float: none;"></div>
 		</div>
 		
-		<div class="review-box">
-			<div class="review-top"><h3 style="float: left;">REVIEW</h3><button type="button" class="btn btnWrite" onclick="" style="float: right;">WRITE</button></div>
-			<div class="review-board">리뷰가 없습니다</div>
-		</div>
 	</div>
 </div>
 </main>

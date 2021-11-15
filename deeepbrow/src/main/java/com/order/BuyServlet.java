@@ -46,6 +46,8 @@ public class BuyServlet extends MyServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("basketBuy.do")!= -1) {
 			basketBuy(req, resp);
+		} else if(uri.indexOf("basketSubmit.do")!= -1) {
+			basketSubmit(req, resp);
 		}
 		
 	}
@@ -127,6 +129,65 @@ public class BuyServlet extends MyServlet {
 	}
 	
 	protected void buySubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 결제 완료
+		BuyDAO dao = new BuyDAO();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			resp.sendRedirect(cp + "/main.do");
+			return;
+		}
+		
+		try {
+			
+			BuyDTO dto = new BuyDTO();
+			
+			dto.setMid(info.getUserId());
+			dto.setDname(info.getUserName());
+			
+
+			dto.setDzipcode(req.getParameter("zip"));
+			dto.setDaddr1(req.getParameter("addr1"));
+			dto.setDaddr2(req.getParameter("addr2"));
+			dto.setPno(Integer.parseInt(req.getParameter("pNo")));
+			
+			// 핸드폰 번호 추가해야함
+			String firstPhone = req.getParameter("phonNum");
+			String phone1 = req.getParameter("phone1");
+			String phone2 = req.getParameter("phone2");
+			String phone = firstPhone + "-" + phone1 + "-" + phone2;
+			dto.setDtel(phone);
+			
+			// 이메일 추가
+//			String email1 = req.getParameter("email1");
+//			String email2 = req.getParameter("email2");
+//			String email = email1 + "@" + email2;
+			
+			// 배송 메모 추가
+			dto.setDel_memo(req.getParameter("memo"));
+			
+			dto.setShipping_fee(0);
+			dto.setQuantity(Integer.parseInt(req.getParameter("proQuantity")));
+			dto.setWhole_price(Integer.parseInt(req.getParameter("wholePrice")));
+			dto.setPay_price(Integer.parseInt(req.getParameter("wholePrice")));
+			dto.setOdprice(Integer.parseInt(req.getParameter("onePrice")));
+			
+			dao.insertBuy(dto);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/buy/buy_ok.jsp");
+		
+	}
+	
+	protected void basketSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 결제 완료
 		BuyDAO dao = new BuyDAO();
 		

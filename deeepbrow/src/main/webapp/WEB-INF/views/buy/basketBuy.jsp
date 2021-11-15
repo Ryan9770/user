@@ -648,7 +648,7 @@ function totalPrice() {
 										<td>
 											<strong>
 												<a href="#" id="pName">${dto.pname }</a>
-												<input name="pNo" type="hidden" value="${dto.pNum }">
+												<input name="pNo" type="hidden" value="${dto.pNum }" data-pno="${dto.pNum }">
 											</strong>
 											<div>
 												[옵션: 없음]
