@@ -417,13 +417,13 @@ function naverPay(){
 	
 	elNaverPayBtn.addEventListener("click", function() {
 	  oPay.open({
-	    "merchantUserKey": "deeepbrowKey",
-	    "merchantPayKey": "deeepbrowPayKey",
-	    "productName": "${dto.pName }",
+	    "merchantUserKey": "deeepbrowKey2",
+	    "merchantPayKey": "deeepbrowPayKey2",
+	    "productName": "deeepbrow",
 	    "totalPayAmount": "100",
 	    "taxScopeAmount": "100",
 	    "taxExScopeAmount": "0",
-	    "returnUrl": "${pageContext.request.contextPath}/buy/buy_ok.do"
+	    "returnUrl": "${pageContext.request.contextPath}/main.do"
 	  });
 	});
 }
@@ -452,7 +452,7 @@ function cardPay() {
 		return;
 	}
 	
-	f.action = "${pageContext.request.contextPath}/buy/buy_ok.do";
+	f.action = "${pageContext.request.contextPath}/buy/basketSubmit_ok.do";
 	f.submit();
 	
 	return;
@@ -477,7 +477,7 @@ function accountPay() {
 	}
 	
 	
-	f.action = "${pageContext.request.contextPath}/buy/buy_ok.do";
+	f.action = "${pageContext.request.contextPath}/buy/basketSubmit_ok.do";
 	f.submit();
 	return;
 }
@@ -576,6 +576,7 @@ function totalPrice() {
 	});
 	
 	$(".totalPrice").text(total + "원");
+	$("#totalPrice").val(total);
 }
 </script>
 </head>
@@ -662,7 +663,7 @@ function totalPrice() {
 											</div>
 										</td>
 										<td>${dto.quantity }개
-											<input type="hidden" name="proQuantity" value="${dto.quantity }">
+											<input type="hidden" name="quantity" value="${dto.quantity }">
 										</td>
 										<td>
 											<span>2,000원</span>
@@ -841,6 +842,8 @@ function totalPrice() {
 								<td>
 									<div>
 										<span class="totalPrice"></span>
+										<input type="hidden" name="totalPrice" id="totalPrice" value="0">
+										
 									</div>
 								</td>
 								<td>

@@ -28,12 +28,6 @@ public class BasketDTO {
 	public void setPname(String pname) {
 		this.pname = pname;
 	}
-	public int getOnePrice() {
-		return onePrice;
-	}
-	public void setOnePrice(int onePrice) {
-		this.onePrice = onePrice;
-	}
 	public int getPrice() {
 		return price;
 	}
@@ -52,7 +46,10 @@ public class BasketDTO {
 	public void setpNum(int pNum) {
 		this.pNum = pNum;
 	}
-	
-	
-
+	public int getOnePrice() {
+		return onePrice;
+	}
+	public void setOnePrice(int onePrice) {
+		this.onePrice = onePrice;
+	}
 }

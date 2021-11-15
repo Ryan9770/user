@@ -40,7 +40,12 @@ public class BasketServlet extends MyServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("basketDeleteAll.do") != -1) {
 			deleteAll(req, resp);
+		} 
+		/*
+		else if(uri.indexOf("basketBuySubmit.do") != -1) {
+			basketBuySubmit(req, resp);
 		}
+		*/
 	}
 	
 	private void basket(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -103,6 +108,7 @@ public class BasketServlet extends MyServlet {
 		
 	}
 	
+
 	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		BasketDAO dao = new BasketDAO();

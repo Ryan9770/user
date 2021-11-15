@@ -21,6 +21,9 @@ public class BuyDTO {
 	private int whole_price;
 	private String imageFilename;
 	
+	private int [] pNums;
+	private int [] quantitys;
+	private int [] onePrices;
 	
 	public int getOrderno() {
 		return orderno;
@@ -136,8 +139,22 @@ public class BuyDTO {
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
 	}
-	
-	
-	
-	
+	public int[] getpNums() {
+		return pNums;
+	}
+	public void setpNums(int[] pNums) {
+		this.pNums = pNums;
+	}
+	public int[] getQuantitys() {
+		return quantitys;
+	}
+	public void setQuantitys(int[] quantitys) {
+		this.quantitys = quantitys;
+	}
+	public int[] getOnePrices() {
+		return onePrices;
+	}
+	public void setOnePrices(int[] onePrices) {
+		this.onePrices = onePrices;
+	}	
 }
